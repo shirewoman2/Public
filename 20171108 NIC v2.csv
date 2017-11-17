@@ -1,0 +1,375 @@
+SampNum,SampleID,Sample,IS.present.,Matrix,Method,SampType,SampVol,VolNICmix,Vial.position,Vial.position.using.letters.and.numbers,File,Compound,workingsln,MassAdded,TheorConc,PeakHeight,HeightRatio,CalcMass,CalcConc,PercDiff,Note
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,3HCG,0.507,#N/A,#N/A,2,0.117647059,0.656669516,65.66695164,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,3HCG,0.507,0,0,14,0.003770536,0.085142788,8.514278757,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,3HCG,0.507,2.535,253.5,1899,0.494273816,2.552028104,255.2028104,0.006717201,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,3HCG,0.507,12.675,1267.5,7827,2.426224427,12.401852,1240.1852,-0.021550138,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,3HCG,0.507,25.35,2535,11852,4.94039183,25.557602,2555.7602,0.008189428,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,3HCG,0.507,50.7,5070,16903,9.528184893,50.66349888,5066.349888,-0.000719943,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,3HCG,0.507,#N/A,#N/A,12916,3.776608187,19.41862413,1941.862413,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,3HCG,0.507,#N/A,#N/A,10550,3.860226857,19.85683122,1985.683122,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,3HCG,0.507,#N/A,#N/A,4198,2.607453416,13.33707652,1333.707652,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,3HCG,0.507,#N/A,#N/A,9633,3.253292806,16.68610105,1668.610105,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,3HCG,0.507,#N/A,#N/A,10186,3.97890625,20.47953286,2047.953286,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,3HCG,0.507,#N/A,#N/A,6787,3.198397738,16.40044793,1640.044793,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,3HCG,0.507,#N/A,#N/A,2895,2.643835616,13.52506369,1352.506369,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,3HCG,0.507,#N/A,#N/A,8224,3.435254804,17.63429407,1763.429407,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,3HCG,0.507,#N/A,#N/A,5989,3.370287001,17.29551541,1729.551541,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,3HCG,0.507,#N/A,#N/A,4497,3.073820916,15.75288532,1575.288532,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,3HCG,0.507,#N/A,#N/A,2488,2.37178265,12.12129259,1212.129259,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,3HCG,0.507,#N/A,#N/A,7244,2.957942017,15.15138971,1515.138971,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,3HCG,0.507,#N/A,#N/A,2824,6.644705882,34.70937085,1388.374834,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,3HCG,0.507,#N/A,#N/A,882,2.456824513,12.55962397,502.3849588,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,3HCG,0.507,#N/A,#N/A,1468,7.303482587,38.30060612,1532.024245,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,3HCG,0.507,#N/A,#N/A,2712,7.554317549,39.67614773,1587.045909,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,CG,0.511,#N/A,#N/A,3,0.176470588,0.651529525,65.15295253,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,CG,0.511,0,0,9,0.002423916,0.37255151,37.255151,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,CG,0.511,2.555,255.5,4766,1.24049974,2.362715422,236.2715422,-0.075258152,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,CG,0.511,12.775,1277.5,23341,7.235275883,12.19284888,1219.284888,-0.045569559,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,CG,0.511,25.55,2555,36810,15.34389329,26.04734864,2604.734864,0.0194657,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,CG,0.511,51.1,5110,51351,28.9464487,51.00567976,5100.567976,-0.001845797,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,CG,0.511,#N/A,#N/A,36813,10.76403509,18.13879813,1813.879813,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,CG,0.511,#N/A,#N/A,30666,11.22063666,18.91732037,1891.732037,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,CG,0.511,#N/A,#N/A,15776,9.798757764,16.49997165,1649.997165,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,CG,0.511,#N/A,#N/A,32584,11.00439041,18.54834542,1854.834542,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,CG,0.511,#N/A,#N/A,28800,11.25,18.96745941,1896.745941,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,CG,0.511,#N/A,#N/A,22478,10.59283695,17.84745036,1784.745036,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,CG,0.511,#N/A,#N/A,11050,10.0913242,16.99568657,1699.568657,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,CG,0.511,#N/A,#N/A,23775,9.931077694,16.7240632,1672.40632,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,CG,0.511,#N/A,#N/A,20095,11.30838492,19.06718039,1906.718039,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,CG,0.511,#N/A,#N/A,16125,11.02187286,18.57815735,1857.815735,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,CG,0.511,#N/A,#N/A,9771,9.314585319,15.68149626,1568.149626,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,CG,0.511,#N/A,#N/A,25709,10.49775419,17.68576627,1768.576627,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,CG,0.511,#N/A,#N/A,9444,22.22117647,38.36963475,1534.78539,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,CG,0.511,#N/A,#N/A,3178,8.852367688,14.90231746,596.0926983,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,CG,0.511,#N/A,#N/A,5832,29.01492537,51.13762308,2045.504923,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,CG,0.511,#N/A,#N/A,9147,25.47910864,44.41328191,1776.531276,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,CO,0.5,#N/A,#N/A,3,0.028301887,0.376492801,37.64928013,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,CO,0.5,0,0,1,0.000262192,0.258880608,25.88806083,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,CO,0.5,2.5,250,2077,0.533521706,2.480692879,248.0692879,-0.007722848,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,CO,0.5,12.5,1250,8890,2.87795403,11.90062954,1190.062954,-0.047949637,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,CO,0.5,25,2500,15459,6.479044426,25.42049097,2542.049097,0.016819639,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,CO,0.5,50,5000,24737,13.71991126,49.9381379,4993.81379,-0.001237242,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,CO,0.5,#N/A,#N/A,13080,3.6222653,14.7827458,1478.27458,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,CO,0.5,#N/A,#N/A,11061,3.105277934,12.78608661,1278.608661,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,CO,0.5,#N/A,#N/A,7699,2.55018218,10.6156383,1061.56383,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,CO,0.5,#N/A,#N/A,10487,3.022190202,12.46298791,1246.298791,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,CO,0.5,#N/A,#N/A,11249,3.290143317,13.50275497,1350.275497,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,CO,0.5,#N/A,#N/A,10191,3.199686028,13.15245787,1315.245787,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,CO,0.5,#N/A,#N/A,7646,2.731689889,11.32843616,1132.843616,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,CO,0.5,#N/A,#N/A,8587,2.606069803,10.83543844,1083.543844,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,CO,0.5,#N/A,#N/A,11004,3.644915535,14.86969037,1486.969037,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,CO,0.5,#N/A,#N/A,10243,3.18303294,13.08788952,1308.788952,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,CO,0.5,#N/A,#N/A,7870,2.568537859,10.68786119,1068.786119,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,CO,0.5,#N/A,#N/A,8987,2.775478691,11.49994517,1149.994517,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,CO,0.5,#N/A,#N/A,6103,8.523743017,32.66669,1306.6676,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,CO,0.5,#N/A,#N/A,2044,3.183800623,13.09086657,523.6346629,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,CO,0.5,#N/A,#N/A,3779,5.79601227,22.93458014,917.3832055,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,CO,0.5,#N/A,#N/A,4424,5.9864682,23.63120472,945.2481889,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,NO,0.495,#N/A,#N/A,86,12.28571429,72.01589175,7201.589175,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,NO,0.495,0,0,76,0.00178853,0.054144377,5.414437687,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,NO,0.495,2.475,247.5,13891,0.315324722,2.341529611,234.1529611,-0.05392743,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,NO,0.495,12.375,1237.5,65664,1.772738317,12.52669076,1252.669076,0.01225784,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,NO,0.495,24.75,2475,108918,3.640672527,24.66660009,2466.660009,-0.003369693,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,NO,0.495,49.5,4950,163158,7.906857281,49.5107496,4951.07496,0.000217164,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,NO,0.495,#N/A,#N/A,53366,1.242977594,8.904632695,890.4632695,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,NO,0.495,#N/A,#N/A,55469,1.307182919,9.348267901,934.8267901,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,NO,0.495,#N/A,#N/A,46228,1.11430362,8.011561606,801.1561606,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,NO,0.495,#N/A,#N/A,49666,1.142035917,8.204492135,820.4492135,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,NO,0.495,#N/A,#N/A,50242,1.259766311,9.020763401,902.0763401,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,NO,0.495,#N/A,#N/A,47217,1.331331416,9.514786298,951.4786298,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,NO,0.495,#N/A,#N/A,40905,1.182054616,8.482458298,848.2458298,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,NO,0.495,#N/A,#N/A,42296,1.230572285,8.818764938,881.8764938,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,NO,0.495,#N/A,#N/A,45495,1.265120547,9.057780733,905.7780733,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,NO,0.495,#N/A,#N/A,47943,1.249459227,8.949478043,894.9478043,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,NO,0.495,#N/A,#N/A,44189,1.09704568,7.891373655,789.1373655,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,NO,0.495,#N/A,#N/A,43422,1.165941679,8.370601623,837.0601623,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,NO,0.495,#N/A,#N/A,24409,3.739123775,25.28182964,1011.273186,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,NO,0.495,#N/A,#N/A,9296,1.447975078,10.31653075,412.66123,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,NO,0.495,#N/A,#N/A,19802,3.504158556,23.80970886,952.3883545,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,NO,0.495,#N/A,#N/A,20688,3.22947237,22.07185628,882.8742513,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,NG,0.502,#N/A,#N/A,31,3.444444444,8.522175791,852.2175791,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,NG,0.502,0,0,32,0.001382528,0.144939384,14.4939384,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,NG,0.502,2.51,251,24135,0.931493632,2.43941993,243.941993,-0.02811955,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,NG,0.502,12.55,1255,117490,5.055942852,12.33823162,1233.823162,-0.016873974,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,NG,0.502,25.1,2510,186106,10.71421992,25.26264838,2526.264838,0.006480015,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,NG,0.502,50.2,5020,273724,22.49354918,50.17465022,5017.465022,-0.000504976,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,NG,0.502,#N/A,#N/A,440023,18.35723821,41.6996401,4169.96401,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,NG,0.502,#N/A,#N/A,410001,18.78326003,42.58528281,4258.528281,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,NG,0.502,#N/A,#N/A,324943,18.42498299,41.84067465,4184.067465,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,NG,0.502,#N/A,#N/A,395330,18.20790346,41.38847605,4138.847605,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,NG,0.502,#N/A,#N/A,376679,17.09457681,39.05678158,3905.678158,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,NG,0.502,#N/A,#N/A,324991,17.14087553,39.15416929,3915.416929,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,NG,0.502,#N/A,#N/A,240170,17.65826042,40.23996741,4023.996741,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,NG,0.502,#N/A,#N/A,305521,16.08597904,36.92598329,3692.598329,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,NG,0.502,#N/A,#N/A,286745,16.24341472,37.25976082,3725.976082,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,NG,0.502,#N/A,#N/A,267354,17.67980426,40.28508074,4028.508074,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,NG,0.502,#N/A,#N/A,288774,20.79755131,46.73254182,4673.254182,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,NG,0.502,#N/A,#N/A,335652,15.75387215,36.22044764,3622.044764,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,NG,0.502,#N/A,#N/A,140385,42.61839709,88.07407056,3522.962822,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,NG,0.502,#N/A,#N/A,50097,18.08555957,41.13327306,1645.330923,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,NG,0.502,#N/A,#N/A,119235,49.86825596,100.6230142,4024.920567,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,NG,0.502,#N/A,#N/A,131932,43.78758712,90.13246241,3605.298496,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,3HC,0.5,#N/A,#N/A,19,0.633333333,3.156454058,315.6454058,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,3HC,0.5,0,0,46,0.005469679,0.136563367,13.65633675,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,3HC,0.5,2.5,250,4161,0.45740354,2.315493209,231.5493209,-0.073802717,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,3HC,0.5,12.5,1250,20171,2.657225662,12.55800999,1255.800999,0.004640799,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,3HC,0.5,25,2500,32637,5.494444444,24.99029352,2499.029352,-0.000388259,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,3HC,0.5,50,5000,46722,11.75691998,49.99950016,4999.950016,-9.99682E-06,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,3HC,0.5,#N/A,#N/A,22032,3.07451856,14.43805414,1443.805414,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,3HC,0.5,#N/A,#N/A,20295,2.649477807,12.52292387,1252.292387,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,3HC,0.5,#N/A,#N/A,12952,2.199728261,10.47478253,1047.478253,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,3HC,0.5,#N/A,#N/A,17937,2.544977299,12.04904646,1204.904646,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,3HC,0.5,#N/A,#N/A,16859,2.53633218,12.00978938,1200.978938,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,3HC,0.5,#N/A,#N/A,17099,2.875231209,13.54255239,1354.255239,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,3HC,0.5,#N/A,#N/A,11611,2.436726128,11.55688301,1155.688301,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,3HC,0.5,#N/A,#N/A,15340,2.619982921,12.38929591,1238.929591,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,3HC,0.5,#N/A,#N/A,14201,2.500176056,11.84551613,1184.551613,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,3HC,0.5,#N/A,#N/A,13830,2.68491555,12.68334953,1268.334953,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,3HC,0.5,#N/A,#N/A,10197,2.128810021,10.14974153,1014.974153,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,3HC,0.5,#N/A,#N/A,18149,2.892270916,13.619288,1361.9288,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,3HC,0.5,#N/A,#N/A,6889,6.902805611,30.88117814,1235.247125,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,3HC,0.5,#N/A,#N/A,2663,2.762448133,13.0338568,521.3542721,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,3HC,0.5,#N/A,#N/A,5319,5.707081545,25.8908529,1035.634116,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,3HC,0.5,#N/A,#N/A,6652,6.787755102,30.40632191,1216.252876,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,COT,0.495,#N/A,#N/A,34,0.320754717,0.492415771,49.24157707,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,COT,0.495,0,0,92,0.024121657,0.3233267,32.33267002,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,COT,0.495,2.475,247.5,14094,3.620344208,2.365990227,236.5990227,-0.044044353,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,COT,0.495,12.375,1237.5,63549,20.57267724,11.79004187,1179.004187,-0.047269343,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,COT,0.495,24.75,2475,109027,45.69446773,25.18812662,2518.812662,0.017702086,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,COT,0.495,49.5,4950,169839,94.19800333,49.43148173,4943.148173,-0.001384207,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,COT,0.495,#N/A,#N/A,39382,10.90612019,6.456751325,645.6751325,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,COT,0.495,#N/A,#N/A,44029,12.36075239,7.266053497,726.6053497,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,COT,0.495,#N/A,#N/A,39383,13.04504803,7.645930563,764.5930563,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,COT,0.495,#N/A,#N/A,39160,11.28530259,6.667948655,666.7948655,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,COT,0.495,#N/A,#N/A,37354,10.92541679,6.467503169,646.7503169,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,COT,0.495,#N/A,#N/A,40421,12.69105181,7.449481339,744.9481339,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,COT,0.495,#N/A,#N/A,36178,12.92533048,7.579509639,757.9509639,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,COT,0.495,#N/A,#N/A,37246,11.30379363,6.678243566,667.8243566,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,COT,0.495,#N/A,#N/A,36337,12.03610467,7.085642563,708.5642563,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,COT,0.495,#N/A,#N/A,40506,12.58732132,7.391889286,739.1889286,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,COT,0.495,#N/A,#N/A,35384,11.54830287,6.81433743,681.433743,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,COT,0.495,#N/A,#N/A,38653,11.93730698,7.030715427,703.0715427,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,COT,0.495,#N/A,#N/A,18877,26.36452514,14.93641177,597.4564707,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,COT,0.495,#N/A,#N/A,7021,10.93613707,6.473476201,258.939048,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,COT,0.495,#N/A,#N/A,17205,26.38803681,14.94911151,597.9644605,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,COT,0.495,#N/A,#N/A,18656,25.24492558,14.33098921,573.2395683,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,NIC,0.5,#N/A,#N/A,325,17.10526316,102.0696852,10206.96852,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,NIC,0.5,0,0,209,0.051694286,-0.19775712,-19.77571196,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,NIC,0.5,2.5,250,1249,0.342098055,2.550353259,255.0353259,0.020141304,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,NIC,0.5,12.5,1250,5272,1.513637669,12.85544838,1285.544838,0.02843587,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,NIC,0.5,25,2500,8768,3.028670121,24.75541797,2475.541797,-0.009783281,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,NIC,0.5,50,5000,15060,6.823742637,50.03360388,5003.360388,0.000672078,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,NIC,0.5,#N/A,#N/A,8683,2.146070193,17.99041672,1799.041672,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,NIC,0.5,#N/A,#N/A,9870,2.293748548,19.1529906,1915.29906,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,NIC,0.5,#N/A,#N/A,9236,2.169093471,18.17252645,1817.252645,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,NIC,0.5,#N/A,#N/A,9673,2.390165555,19.90506046,1990.506046,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,NIC,0.5,#N/A,#N/A,7467,2.032389766,17.08646013,1708.646013,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,NIC,0.5,#N/A,#N/A,7897,2.3601315,19.67136942,1967.136942,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,NIC,0.5,#N/A,#N/A,7247,2.284678436,19.08196223,1908.196223,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,NIC,0.5,#N/A,#N/A,7586,2.432189804,20.2311738,2023.11738,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,NIC,0.5,#N/A,#N/A,7272,2.172691963,18.20096077,1820.096077,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,NIC,0.5,#N/A,#N/A,8600,2.158634538,18.0898382,1808.98382,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,NIC,0.5,#N/A,#N/A,7890,1.961222968,16.51646032,1651.646032,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,NIC,0.5,#N/A,#N/A,8123,2.246404867,18.78170468,1878.170468,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,NIC,0.5,#N/A,#N/A,3624,5.644859813,42.71849593,1708.739837,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,NIC,0.5,#N/A,#N/A,1542,2.635897436,21.79784649,871.9138597,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,NIC,0.5,#N/A,#N/A,3398,6.534615385,48.2767248,1931.068992,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,NIC,0.5,#N/A,#N/A,3607,5.734499205,43.28938216,1731.575287,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,NORN,0.5,#N/A,#N/A,130,2.954545455,9.97516985,997.516985,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,NORN,0.5,0,0,104,0.007671314,0.034177706,3.417770569,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,NORN,0.5,2.5,250,10538,0.729778393,2.539971602,253.9971602,0.015988641,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,NORN,0.5,12.5,1250,47874,3.685450346,12.33215527,1233.215527,-0.013427578,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,NORN,0.5,25,2500,82304,7.862437906,25.10903568,2510.903568,0.004361427,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,NORN,0.5,50,5000,131974,17.03549761,49.98475908,4998.475908,-0.000304818,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,NORN,0.5,#N/A,#N/A,121893,7.909480241,25.24688145,2524.688145,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,NORN,0.5,#N/A,#N/A,105463,7.050137041,22.70895892,2270.895892,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,NORN,0.5,#N/A,#N/A,81181,5.997857407,19.54194091,1954.194091,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,NORN,0.5,#N/A,#N/A,95431,6.601480354,21.36683958,2136.683958,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,NORN,0.5,#N/A,#N/A,112146,7.826505688,25.00366188,2500.366188,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,NORN,0.5,#N/A,#N/A,96698,6.983822042,22.5113349,2251.13349,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,NORN,0.5,#N/A,#N/A,73484,6.105857914,19.87010264,1987.010264,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,NORN,0.5,#N/A,#N/A,89169,6.377869966,20.693416,2069.3416,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,NORN,0.5,#N/A,#N/A,108428,8.242967919,26.22055966,2622.055966,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,NORN,0.5,#N/A,#N/A,96956,7.236602478,23.26326076,2326.326076,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,NORN,0.5,#N/A,#N/A,77385,5.856732006,19.11202817,1911.202817,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,NORN,0.5,#N/A,#N/A,95730,6.242582328,20.28450361,2028.450361,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,NORN,0.5,#N/A,#N/A,55869,21.08264151,59.91801789,2396.720716,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,NORN,0.5,#N/A,#N/A,17704,6.838161452,22.07634342,883.0537366,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,NORN,0.5,#N/A,#N/A,39112,18.07393715,52.58549967,2103.419987,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,NORN,0.5,#N/A,#N/A,44473,17.52975956,51.22731966,2049.092786,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,d3-CG,#N/A,#N/A,#N/A,17,#N/A,#N/A,#N/A,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,d3-CG,#N/A,#N/A,#N/A,3713,#N/A,#N/A,#N/A,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,d3-CG,#N/A,#N/A,#N/A,3842,#N/A,#N/A,#N/A,#N/A,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,d3-CG,#N/A,#N/A,#N/A,3226,#N/A,#N/A,#N/A,#N/A,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,d3-CG,#N/A,#N/A,#N/A,2399,#N/A,#N/A,#N/A,#N/A,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,d3-CG,#N/A,#N/A,#N/A,1774,#N/A,#N/A,#N/A,#N/A,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,d3-CG,#N/A,#N/A,#N/A,3420,#N/A,#N/A,#N/A,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,d3-CG,#N/A,#N/A,#N/A,2733,#N/A,#N/A,#N/A,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,d3-CG,#N/A,#N/A,#N/A,1610,#N/A,#N/A,#N/A,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,d3-CG,#N/A,#N/A,#N/A,2961,#N/A,#N/A,#N/A,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,d3-CG,#N/A,#N/A,#N/A,2560,#N/A,#N/A,#N/A,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,d3-CG,#N/A,#N/A,#N/A,2122,#N/A,#N/A,#N/A,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,d3-CG,#N/A,#N/A,#N/A,1095,#N/A,#N/A,#N/A,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,d3-CG,#N/A,#N/A,#N/A,2394,#N/A,#N/A,#N/A,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,d3-CG,#N/A,#N/A,#N/A,1777,#N/A,#N/A,#N/A,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,d3-CG,#N/A,#N/A,#N/A,1463,#N/A,#N/A,#N/A,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,d3-CG,#N/A,#N/A,#N/A,1049,#N/A,#N/A,#N/A,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,d3-CG,#N/A,#N/A,#N/A,2449,#N/A,#N/A,#N/A,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,d3-CG,#N/A,#N/A,#N/A,425,#N/A,#N/A,#N/A,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,d3-CG,#N/A,#N/A,#N/A,359,#N/A,#N/A,#N/A,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,d3-CG,#N/A,#N/A,#N/A,201,#N/A,#N/A,#N/A,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,d3-CG,#N/A,#N/A,#N/A,359,#N/A,#N/A,#N/A,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,d3-CO,#N/A,#N/A,#N/A,106,#N/A,#N/A,#N/A,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,d3-CO,#N/A,#N/A,#N/A,3814,#N/A,#N/A,#N/A,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,d3-CO,#N/A,#N/A,#N/A,3893,#N/A,#N/A,#N/A,#N/A,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,d3-CO,#N/A,#N/A,#N/A,3089,#N/A,#N/A,#N/A,#N/A,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,d3-CO,#N/A,#N/A,#N/A,2386,#N/A,#N/A,#N/A,#N/A,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,d3-CO,#N/A,#N/A,#N/A,1803,#N/A,#N/A,#N/A,#N/A,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,d3-CO,#N/A,#N/A,#N/A,3611,#N/A,#N/A,#N/A,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,d3-CO,#N/A,#N/A,#N/A,3562,#N/A,#N/A,#N/A,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,d3-CO,#N/A,#N/A,#N/A,3019,#N/A,#N/A,#N/A,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,d3-CO,#N/A,#N/A,#N/A,3470,#N/A,#N/A,#N/A,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,d3-CO,#N/A,#N/A,#N/A,3419,#N/A,#N/A,#N/A,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,d3-CO,#N/A,#N/A,#N/A,3185,#N/A,#N/A,#N/A,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,d3-CO,#N/A,#N/A,#N/A,2799,#N/A,#N/A,#N/A,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,d3-CO,#N/A,#N/A,#N/A,3295,#N/A,#N/A,#N/A,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,d3-CO,#N/A,#N/A,#N/A,3019,#N/A,#N/A,#N/A,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,d3-CO,#N/A,#N/A,#N/A,3218,#N/A,#N/A,#N/A,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,d3-CO,#N/A,#N/A,#N/A,3064,#N/A,#N/A,#N/A,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,d3-CO,#N/A,#N/A,#N/A,3238,#N/A,#N/A,#N/A,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,d3-CO,#N/A,#N/A,#N/A,716,#N/A,#N/A,#N/A,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,d3-CO,#N/A,#N/A,#N/A,642,#N/A,#N/A,#N/A,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,d3-CO,#N/A,#N/A,#N/A,652,#N/A,#N/A,#N/A,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,d3-CO,#N/A,#N/A,#N/A,739,#N/A,#N/A,#N/A,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,d3-NO,#N/A,#N/A,#N/A,7,#N/A,#N/A,#N/A,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,d3-NO,#N/A,#N/A,#N/A,42493,#N/A,#N/A,#N/A,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,d3-NO,#N/A,#N/A,#N/A,44053,#N/A,#N/A,#N/A,#N/A,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,d3-NO,#N/A,#N/A,#N/A,37041,#N/A,#N/A,#N/A,#N/A,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,d3-NO,#N/A,#N/A,#N/A,29917,#N/A,#N/A,#N/A,#N/A,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,d3-NO,#N/A,#N/A,#N/A,20635,#N/A,#N/A,#N/A,#N/A,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,d3-NO,#N/A,#N/A,#N/A,42934,#N/A,#N/A,#N/A,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,d3-NO,#N/A,#N/A,#N/A,42434,#N/A,#N/A,#N/A,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,d3-NO,#N/A,#N/A,#N/A,41486,#N/A,#N/A,#N/A,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,d3-NO,#N/A,#N/A,#N/A,43489,#N/A,#N/A,#N/A,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,d3-NO,#N/A,#N/A,#N/A,39882,#N/A,#N/A,#N/A,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,d3-NO,#N/A,#N/A,#N/A,35466,#N/A,#N/A,#N/A,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,d3-NO,#N/A,#N/A,#N/A,34605,#N/A,#N/A,#N/A,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,d3-NO,#N/A,#N/A,#N/A,34371,#N/A,#N/A,#N/A,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,d3-NO,#N/A,#N/A,#N/A,35961,#N/A,#N/A,#N/A,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,d3-NO,#N/A,#N/A,#N/A,38371,#N/A,#N/A,#N/A,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,d3-NO,#N/A,#N/A,#N/A,40280,#N/A,#N/A,#N/A,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,d3-NO,#N/A,#N/A,#N/A,37242,#N/A,#N/A,#N/A,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,d3-NO,#N/A,#N/A,#N/A,6528,#N/A,#N/A,#N/A,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,d3-NO,#N/A,#N/A,#N/A,6420,#N/A,#N/A,#N/A,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,d3-NO,#N/A,#N/A,#N/A,5651,#N/A,#N/A,#N/A,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,d3-NO,#N/A,#N/A,#N/A,6406,#N/A,#N/A,#N/A,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,d3-NG,#N/A,#N/A,#N/A,9,#N/A,#N/A,#N/A,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,d3-NG,#N/A,#N/A,#N/A,23146,#N/A,#N/A,#N/A,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,d3-NG,#N/A,#N/A,#N/A,25910,#N/A,#N/A,#N/A,#N/A,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,d3-NG,#N/A,#N/A,#N/A,23238,#N/A,#N/A,#N/A,#N/A,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,d3-NG,#N/A,#N/A,#N/A,17370,#N/A,#N/A,#N/A,#N/A,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,d3-NG,#N/A,#N/A,#N/A,12169,#N/A,#N/A,#N/A,#N/A,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,d3-NG,#N/A,#N/A,#N/A,23970,#N/A,#N/A,#N/A,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,d3-NG,#N/A,#N/A,#N/A,21828,#N/A,#N/A,#N/A,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,d3-NG,#N/A,#N/A,#N/A,17636,#N/A,#N/A,#N/A,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,d3-NG,#N/A,#N/A,#N/A,21712,#N/A,#N/A,#N/A,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,d3-NG,#N/A,#N/A,#N/A,22035,#N/A,#N/A,#N/A,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,d3-NG,#N/A,#N/A,#N/A,18960,#N/A,#N/A,#N/A,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,d3-NG,#N/A,#N/A,#N/A,13601,#N/A,#N/A,#N/A,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,d3-NG,#N/A,#N/A,#N/A,18993,#N/A,#N/A,#N/A,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,d3-NG,#N/A,#N/A,#N/A,17653,#N/A,#N/A,#N/A,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,d3-NG,#N/A,#N/A,#N/A,15122,#N/A,#N/A,#N/A,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,d3-NG,#N/A,#N/A,#N/A,13885,#N/A,#N/A,#N/A,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,d3-NG,#N/A,#N/A,#N/A,21306,#N/A,#N/A,#N/A,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,d3-NG,#N/A,#N/A,#N/A,3294,#N/A,#N/A,#N/A,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,d3-NG,#N/A,#N/A,#N/A,2770,#N/A,#N/A,#N/A,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,d3-NG,#N/A,#N/A,#N/A,2391,#N/A,#N/A,#N/A,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,d3-NG,#N/A,#N/A,#N/A,3013,#N/A,#N/A,#N/A,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,d3-3HC,#N/A,#N/A,#N/A,30,#N/A,#N/A,#N/A,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,d3-3HC,#N/A,#N/A,#N/A,8410,#N/A,#N/A,#N/A,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,d3-3HC,#N/A,#N/A,#N/A,9097,#N/A,#N/A,#N/A,#N/A,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,d3-3HC,#N/A,#N/A,#N/A,7591,#N/A,#N/A,#N/A,#N/A,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,d3-3HC,#N/A,#N/A,#N/A,5940,#N/A,#N/A,#N/A,#N/A,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,d3-3HC,#N/A,#N/A,#N/A,3974,#N/A,#N/A,#N/A,#N/A,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,d3-3HC,#N/A,#N/A,#N/A,7166,#N/A,#N/A,#N/A,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,d3-3HC,#N/A,#N/A,#N/A,7660,#N/A,#N/A,#N/A,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,d3-3HC,#N/A,#N/A,#N/A,5888,#N/A,#N/A,#N/A,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,d3-3HC,#N/A,#N/A,#N/A,7048,#N/A,#N/A,#N/A,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,d3-3HC,#N/A,#N/A,#N/A,6647,#N/A,#N/A,#N/A,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,d3-3HC,#N/A,#N/A,#N/A,5947,#N/A,#N/A,#N/A,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,d3-3HC,#N/A,#N/A,#N/A,4765,#N/A,#N/A,#N/A,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,d3-3HC,#N/A,#N/A,#N/A,5855,#N/A,#N/A,#N/A,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,d3-3HC,#N/A,#N/A,#N/A,5680,#N/A,#N/A,#N/A,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,d3-3HC,#N/A,#N/A,#N/A,5151,#N/A,#N/A,#N/A,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,d3-3HC,#N/A,#N/A,#N/A,4790,#N/A,#N/A,#N/A,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,d3-3HC,#N/A,#N/A,#N/A,6275,#N/A,#N/A,#N/A,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,d3-3HC,#N/A,#N/A,#N/A,998,#N/A,#N/A,#N/A,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,d3-3HC,#N/A,#N/A,#N/A,964,#N/A,#N/A,#N/A,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,d3-3HC,#N/A,#N/A,#N/A,932,#N/A,#N/A,#N/A,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,d3-3HC,#N/A,#N/A,#N/A,980,#N/A,#N/A,#N/A,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,d3-COT,#N/A,#N/A,#N/A,106,#N/A,#N/A,#N/A,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,d3-COT,#N/A,#N/A,#N/A,3814,#N/A,#N/A,#N/A,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,d3-COT,#N/A,#N/A,#N/A,3893,#N/A,#N/A,#N/A,#N/A,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,d3-COT,#N/A,#N/A,#N/A,3089,#N/A,#N/A,#N/A,#N/A,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,d3-COT,#N/A,#N/A,#N/A,2386,#N/A,#N/A,#N/A,#N/A,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,d3-COT,#N/A,#N/A,#N/A,1803,#N/A,#N/A,#N/A,#N/A,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,d3-COT,#N/A,#N/A,#N/A,3611,#N/A,#N/A,#N/A,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,d3-COT,#N/A,#N/A,#N/A,3562,#N/A,#N/A,#N/A,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,d3-COT,#N/A,#N/A,#N/A,3019,#N/A,#N/A,#N/A,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,d3-COT,#N/A,#N/A,#N/A,3470,#N/A,#N/A,#N/A,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,d3-COT,#N/A,#N/A,#N/A,3419,#N/A,#N/A,#N/A,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,d3-COT,#N/A,#N/A,#N/A,3185,#N/A,#N/A,#N/A,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,d3-COT,#N/A,#N/A,#N/A,2799,#N/A,#N/A,#N/A,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,d3-COT,#N/A,#N/A,#N/A,3295,#N/A,#N/A,#N/A,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,d3-COT,#N/A,#N/A,#N/A,3019,#N/A,#N/A,#N/A,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,d3-COT,#N/A,#N/A,#N/A,3218,#N/A,#N/A,#N/A,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,d3-COT,#N/A,#N/A,#N/A,3064,#N/A,#N/A,#N/A,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,d3-COT,#N/A,#N/A,#N/A,3238,#N/A,#N/A,#N/A,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,d3-COT,#N/A,#N/A,#N/A,716,#N/A,#N/A,#N/A,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,d3-COT,#N/A,#N/A,#N/A,642,#N/A,#N/A,#N/A,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,d3-COT,#N/A,#N/A,#N/A,652,#N/A,#N/A,#N/A,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,d3-COT,#N/A,#N/A,#N/A,739,#N/A,#N/A,#N/A,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,d4-NIC,#N/A,#N/A,#N/A,19,#N/A,#N/A,#N/A,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,d4-NIC,#N/A,#N/A,#N/A,4043,#N/A,#N/A,#N/A,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,d4-NIC,#N/A,#N/A,#N/A,3651,#N/A,#N/A,#N/A,#N/A,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,d4-NIC,#N/A,#N/A,#N/A,3483,#N/A,#N/A,#N/A,#N/A,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,d4-NIC,#N/A,#N/A,#N/A,2895,#N/A,#N/A,#N/A,#N/A,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,d4-NIC,#N/A,#N/A,#N/A,2207,#N/A,#N/A,#N/A,#N/A,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,d4-NIC,#N/A,#N/A,#N/A,4046,#N/A,#N/A,#N/A,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,d4-NIC,#N/A,#N/A,#N/A,4303,#N/A,#N/A,#N/A,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,d4-NIC,#N/A,#N/A,#N/A,4258,#N/A,#N/A,#N/A,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,d4-NIC,#N/A,#N/A,#N/A,4047,#N/A,#N/A,#N/A,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,d4-NIC,#N/A,#N/A,#N/A,3674,#N/A,#N/A,#N/A,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,d4-NIC,#N/A,#N/A,#N/A,3346,#N/A,#N/A,#N/A,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,d4-NIC,#N/A,#N/A,#N/A,3172,#N/A,#N/A,#N/A,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,d4-NIC,#N/A,#N/A,#N/A,3119,#N/A,#N/A,#N/A,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,d4-NIC,#N/A,#N/A,#N/A,3347,#N/A,#N/A,#N/A,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,d4-NIC,#N/A,#N/A,#N/A,3984,#N/A,#N/A,#N/A,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,d4-NIC,#N/A,#N/A,#N/A,4023,#N/A,#N/A,#N/A,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,d4-NIC,#N/A,#N/A,#N/A,3616,#N/A,#N/A,#N/A,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,d4-NIC,#N/A,#N/A,#N/A,642,#N/A,#N/A,#N/A,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,d4-NIC,#N/A,#N/A,#N/A,585,#N/A,#N/A,#N/A,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,d4-NIC,#N/A,#N/A,#N/A,520,#N/A,#N/A,#N/A,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,d4-NIC,#N/A,#N/A,#N/A,629,#N/A,#N/A,#N/A,#N/A,#N/A
+1,blank urine,blank urine 1,FALSE,urine,A,blank,10,0,1,P1-A1,NIC001.d,d3-NORN,#N/A,#N/A,#N/A,44,#N/A,#N/A,#N/A,#N/A,#N/A
+3,std 0,std 0,TRUE,urine,A,standard,10,0,3,P1-A2,NIC003.d,d3-NORN,#N/A,#N/A,#N/A,13557,#N/A,#N/A,#N/A,#N/A,#N/A
+4,std 5,std 5,TRUE,urine,A,standard,10,5,4,P1-A3,NIC004.d,d3-NORN,#N/A,#N/A,#N/A,14440,#N/A,#N/A,#N/A,#N/A,#N/A
+5,std 25,std 25,TRUE,urine,A,standard,10,25,5,P1-A4,NIC005.d,d3-NORN,#N/A,#N/A,#N/A,12990,#N/A,#N/A,#N/A,#N/A,#N/A
+6,std 50,std 50,TRUE,urine,A,standard,10,50,6,P1-A5,NIC006.d,d3-NORN,#N/A,#N/A,#N/A,10468,#N/A,#N/A,#N/A,#N/A,#N/A
+7,std 100,std 100,TRUE,urine,A,standard,10,100,7,P1-A6,NIC007.d,d3-NORN,#N/A,#N/A,#N/A,7747,#N/A,#N/A,#N/A,#N/A,#N/A
+8,spiked urine 1 method A,spiked urine 1,TRUE,urine,A,QC,10,0,8,P1-A7,NIC008.d,d3-NORN,#N/A,#N/A,#N/A,15411,#N/A,#N/A,#N/A,#N/A,#N/A
+9,spiked urine 2 method A,spiked urine 2,TRUE,urine,A,QC,10,0,9,P1-A8,NIC009.d,d3-NORN,#N/A,#N/A,#N/A,14959,#N/A,#N/A,#N/A,#N/A,#N/A
+10,spiked urine 3 method A,spiked urine 3,TRUE,urine,A,QC,10,0,10,P1-A9,NIC010.d,d3-NORN,#N/A,#N/A,#N/A,13535,#N/A,#N/A,#N/A,#N/A,#N/A
+11,spiked urine 4 method A,spiked urine 4,TRUE,urine,A,QC,10,0,11,P1-A10,NIC011.d,d3-NORN,#N/A,#N/A,#N/A,14456,#N/A,#N/A,#N/A,#N/A,#N/A
+12,spiked urine 1 method B,spiked urine 1,TRUE,urine,B,QC,10,0,12,P1-A11,NIC012.d,d3-NORN,#N/A,#N/A,#N/A,14329,#N/A,#N/A,#N/A,#N/A,#N/A
+13,spiked urine 2 method B,spiked urine 2,TRUE,urine,B,QC,10,0,13,P1-A12,NIC013.d,d3-NORN,#N/A,#N/A,#N/A,13846,#N/A,#N/A,#N/A,#N/A,#N/A
+14,spiked urine 3 method B,spiked urine 3,TRUE,urine,B,QC,10,0,14,P1-B1,NIC014.d,d3-NORN,#N/A,#N/A,#N/A,12035,#N/A,#N/A,#N/A,#N/A,#N/A
+15,spiked urine 4 method B,spiked urine 4,TRUE,urine,B,QC,10,0,15,P1-B2,NIC015.d,d3-NORN,#N/A,#N/A,#N/A,13981,#N/A,#N/A,#N/A,#N/A,#N/A
+16,spiked urine 1 method C,spiked urine 1,TRUE,urine,C,QC,10,0,16,P1-B3,NIC016.d,d3-NORN,#N/A,#N/A,#N/A,13154,#N/A,#N/A,#N/A,#N/A,#N/A
+17,spiked urine 2 method C,spiked urine 2,TRUE,urine,C,QC,10,0,17,P1-B4,NIC017.d,d3-NORN,#N/A,#N/A,#N/A,13398,#N/A,#N/A,#N/A,#N/A,#N/A
+18,spiked urine 3 method C,spiked urine 3,TRUE,urine,C,QC,10,0,18,P1-B5,NIC018.d,d3-NORN,#N/A,#N/A,#N/A,13213,#N/A,#N/A,#N/A,#N/A,#N/A
+19,spiked urine 4 method C,spiked urine 4,TRUE,urine,C,QC,10,0,19,P1-B6,NIC019.d,d3-NORN,#N/A,#N/A,#N/A,15335,#N/A,#N/A,#N/A,#N/A,#N/A
+20,spiked urine 1 method D,spiked urine 1,TRUE,urine,D,QC,25,0,20,P1-B7,NIC020.d,d3-NORN,#N/A,#N/A,#N/A,2650,#N/A,#N/A,#N/A,#N/A,#N/A
+21,spiked urine 2 method D,spiked urine 2,TRUE,urine,D,QC,25,0,21,P1-B8,NIC021.d,d3-NORN,#N/A,#N/A,#N/A,2589,#N/A,#N/A,#N/A,#N/A,#N/A
+22,spiked urine 3 method D,spiked urine 3,TRUE,urine,D,QC,25,0,22,P1-B9,NIC022.d,d3-NORN,#N/A,#N/A,#N/A,2164,#N/A,#N/A,#N/A,#N/A,#N/A
+23,spiked urine 4 method D,spiked urine 4,TRUE,urine,D,QC,25,0,23,P1-B10,NIC023.d,d3-NORN,#N/A,#N/A,#N/A,2537,#N/A,#N/A,#N/A,#N/A,#N/A
