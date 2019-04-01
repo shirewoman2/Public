@@ -1,0 +1,2355 @@
+---
+title: 'GDM study: Summary graphs and analyses'
+author: "Report prepared by Laura Shireman, Ph.D."
+date: "3/30/19"
+output:
+      word_document:
+            reference_docx: Landscape_orientation_template.docx
+---
+
+```{r set-options, echo=FALSE}
+suppressWarnings(library(knitr))
+
+opts_chunk$set(echo = FALSE, fig.width = 4, fig.height = 3,
+               message = FALSE, warning = FALSE,
+               dpi = 300)
+
+knit_print.data.frame = function(x, ...) {
+      res = paste(c("", "", kable(x, row.names = FALSE)), collapse = "\n")
+      asis_output(res)
+}
+
+
+```
+
+This report includes only analyses discussed at meetings on 3/19/18, 3/20/18, and 5/3/18 as well as emails from 6/21/18, 6/22/18, 7/9/18, and 7/31/18.  
+
+ **One major difference between this report and previous versions is that I am doing nothing to adjust p values for multiple testing. I still think that probably should be done, but we're doing so many different tests and then combining the results in so many ways that it's unclear which groups of tests should be considered together for adjustment. I think it would be better to just** ***not*** **do any adjustments and then say clearly that we're not doing any adjustments.**  
+
+
+```{r Housekeeping}
+# Housekeeping -------------------------------------------------------
+library(plyr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(xlsx)
+library(stringr)
+library(seqinr)
+library(gridExtra)
+library(png)
+library(grid)
+
+
+# Theme for graphs made using ggplot2
+ThemeLaura <- function (base_size = 12, base_family = "") {
+      theme_gray(base_size = base_size, base_family = base_family) %+replace% 
+            theme(
+                  panel.background = element_rect(fill="white", color=NA),
+                  panel.grid.minor.y = element_line(color="white"),
+                  panel.grid.minor.x = element_line(color="white"),
+                  panel.grid.major = element_line(colour = "white"),
+                  plot.background = element_rect(fill="white", colour=NA),
+                  panel.border = element_rect(color="black", fill=NA),
+                  strip.background = element_rect(color=NA, fill="white"),
+                  legend.background = element_rect(color=NA, fill="white"),
+                  legend.key = element_rect(color=NA, fill="white")
+            )   
+}
+
+scale_colour_discrete <- function(...) scale_colour_brewer(..., palette="Set1")
+scale_fill_discrete <- function(...) scale_fill_brewer(... , palette="Set1")
+
+theme_set(ThemeLaura())
+
+MainDir <- "L:/pklab/GDM"
+
+if(Sys.info()[["nodename"]] == "SOP-D-2FFVP52"){ # Brunhilde
+      MainScriptDir <- "C:/Users/shireman.NETID/Documents/R/General scripts"
+}
+
+if(Sys.info()[["nodename"]] == "BUFFY"){
+      MainScriptDir <- "C:/Users/Laura Shireman/Documents/R/General scripts"
+}
+
+setwd(MainDir)
+load("GDM data.RData")
+
+
+setwd(MainScriptDir)
+source("mean.sd function.R")
+source("starSig function.R")
+source("tukeyStar function.R")
+source("noncompAUC function.R")
+
+# Setting starSig options to what I want for entire script. 
+SigCutoff <- 0.05
+starSig2 <- function(x) {
+      starSig(x, sig = 1, starlevels = c(c(0.001, 0.01, SigCutoff)))
+}
+
+g_legend <- function(a.gplot){
+      tmp <- ggplot_gtable(ggplot_build(a.gplot))
+      leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+      legend <- tmp$grobs[[leg]]
+      return(legend)}
+
+
+GDMColors <- Groups$Color
+names(GDMColors) <- Groups$Arm
+
+
+
+```
+
+# Histograms
+
+The following graphs are histograms showing the distribution of values for the change in Phi total, SI, and DI, adjusting for changes in normal pregancy.   
+
+## Change in Phi total, adjusted for changes in normal pregnancy
+
+```{r, fig.height = 6, fig.width = 4}
+
+ggplot(Subjects[Subjects$Arm %in% c("GDM Combo", "GDM GLY", "GDM MET"), ],
+       aes(x = Phi.t.delta.NormA, fill = Arm)) +
+      geom_histogram(color = "white", bins = 20) +
+      geom_vline(xintercept = 0, color = "red") +
+      facet_wrap(~ Arm, ncol = 1) +
+      xlab(Labels[["Phi.t.delta.NormA2"]]) +
+      scale_fill_manual(values = GDMColors) +
+      theme(legend.position = "none", 
+            plot.margin = unit(c(1, 1, 0, 1), "lines"))
+
+
+```
+
+**Hypothesis:** When adjusted for changes that occur during a healthy pregnancy, the change in Phi total differs from 0. 
+
+Results from Student's t tests for each group: 
+
+```{r}
+
+sigSummary <- function(DF, Param, ParamPretty){
+      
+      names(DF)[names(DF) == Param] <- "PARAM"
+      DF <- ddply(DF, "Arm", function(x){
+            data.frame(
+                  pval = starSig(t.test(x$PARAM, mu = 0)$p.value, 1))
+      })
+      DF$Text <- paste0(DF$Arm, " (p = ", DF$pval, ")")
+      
+      WhichSig <- which(str_detect(DF$Text, "\\*"))
+      if(length(WhichSig) > 0){
+            if(length(WhichSig) == 1){
+                  SigDif <- paste("There was a significant change in", 
+                                  ParamPretty, "for the",
+                                  DF$Text[which(str_detect(DF$Text, "\\*"))], 
+                                  "group.")
+                  
+            } else {
+                  SigDif <- paste("There was a significant change in", 
+                                  ParamPretty, "for the",
+                                  str_c(DF$Text[which(str_detect(DF$Text, "\\*"))], 
+                                        collapse = " and "),
+                                  "groups.")
+            }
+      } else {
+            SigDif <- ""
+      }
+      
+      DF$Text <- NULL
+      
+      Out <- list(DF, SigDif)
+      names(Out) <- c("DF", "SigDif")
+      
+      return(Out)
+      
+}
+
+```
+```{r}
+
+Out <- sigSummary(Subjects[Subjects$DiseaseSt == "GDM", ], 
+           Param = "Phi.t.delta.NormA",
+           ParamPretty = "Phi total")
+
+kable(Out[["DF"]])
+
+```
+
+
+`r Out[["SigDif"]]`
+
+**Hypothesis:** When adjusted for changes that occur during a healthy pregnancy, the change in Phi total differs between GDM treatment arms. 
+
+An ANOVA was performed to evaluate whether there was a difference in the change in Phi total between GDM GLY, GDM MET, and GDM Combo. Results: 
+
+```{r}
+
+rm(Out)
+
+Subjects.GDM <- Subjects[Subjects$Arm %in% c("GDM Combo", "GDM GLY", "GDM MET"), ]
+
+Phi.t.aov <- aov(Phi.t.delta.NormA ~ Arm, data = Subjects.GDM)
+
+pval <- starSig2(summary(Phi.t.aov)[[1]]["Arm", "Pr(>F)"])
+
+yesno <- ifelse(str_detect(pval, "\\*"), "is", "is not")
+
+```
+```{r, fig.height = 4, fig.width = 4}
+
+TKdf <- as.data.frame(TukeyHSD(Phi.t.aov)[[1]])
+TKdf$Text <- paste0(sub("-", " and ", row.names(TKdf)), 
+                    " (p = ", starSig2(TKdf$"p adj"), ")")
+
+TukSig <- which(TKdf$"p adj" <= SigCutoff)
+
+if(length(TukSig) > 0){
+      if(length(TukSig) == 1){
+            SigDif <- paste("Based on a Tukey post-hoc test, there was a significant difference in Phi total between the",
+                            TKdf$Text[TukSig], 
+                            "groups.")
+            
+      } else {
+            SigDif <- paste("Based on a Tukey post-hoc test, there was a significant difference in Phi total between the",
+                            str_c(TKdf$Text[TukSig], 
+                                  collapse = " and "),
+                            "groups.")
+      }
+} else {
+      SigDif <- ""
+}
+
+tukeyStar(data = Subjects.GDM, Tukey.df = TKdf, 
+          xval = "Arm", yval = "SI.delta.NormA", 
+          barsize = 1, textsize = 6) +
+      scale_fill_manual(values = GDMColors) +
+      # theme(axis.text.y = element_text(margin = margin(0, 0, 0, -20, unit = "pt"))) +
+      ylab(Labels[["Phi.t.delta.NormA2"]])
+
+
+```
+
+There `r yesno` a significant difference in Phi total between treatment arms with p = `r pval`. `r SigDif`
+
+## Change in SI, adjusted for changes in normal pregnancy
+
+```{r, fig.height = 6, fig.width = 4}
+
+rm(yesno, pval, TKdf, SigDif)
+
+ggplot(Subjects[Subjects$Arm %in% c("GDM Combo", "GDM GLY", "GDM MET"), ],
+       aes(x = SI.delta.NormA, fill = Arm)) +
+      geom_histogram(color = "white", bins = 20) +
+      geom_vline(xintercept = 0, color = "red") +
+      facet_wrap(~ Arm, ncol = 1) +
+      xlab(Labels[["SI.delta.NormA2"]]) +
+      scale_fill_manual(values = GDMColors) +
+      theme(legend.position = "none")
+
+
+```
+
+**Hypothesis:** When adjusted for changes that occur during a healthy pregnancy, the change in SI differs from 0. 
+
+Results from Student's t tests for each group: 
+
+```{r}
+
+Out <- sigSummary(Subjects[Subjects$DiseaseSt == "GDM", ], 
+           Param = "SI.delta.NormA",
+           ParamPretty = "SI")
+
+kable(Out[["DF"]])
+
+```
+
+`r Out[["SigDif"]]`
+
+**Hypothesis:** When adjusted for changes that occur during a healthy pregnancy, the change in SI differs between GDM treatment arms. 
+
+An ANOVA was performed to evaluate whether there was a difference in the change in SI between GDM GLY, GDM MET, and GDM Combo. Results: 
+
+```{r}
+
+rm(Out)
+
+Subjects.GDM <- Subjects[Subjects$Arm %in% c("GDM Combo", "GDM GLY", "GDM MET"), ]
+
+SI.aov <- aov(SI.delta.NormA ~ Arm, data = Subjects.GDM)
+
+pval <- starSig2(summary(SI.aov)[[1]]["Arm", "Pr(>F)"])
+
+yesno <- ifelse(str_detect(pval, "\\*"), "is", "is not")
+
+```
+```{r, fig.height = 4, fig.width = 4}
+
+TKdf <- as.data.frame(TukeyHSD(SI.aov)[[1]])
+
+TukSig <- which(TKdf$"p adj" <= SigCutoff)
+TKdf$Text <- paste0(sub("-", " and ", row.names(TKdf)), 
+                    " (p = ", starSig2(TKdf$"p adj"), ")")
+
+if(length(TukSig) > 0){
+      if(length(TukSig) == 1){
+            SigDif <- paste("Based on a Tukey post-hoc test, there was a significant difference in SI between the",
+                            TKdf$Text[TukSig], 
+                            "groups.")
+            
+      } else {
+            SigDif <- paste("Based on a Tukey post-hoc test, there was a significant difference in SI between the",
+                            str_c(TKdf$Text[TukSig], 
+                                  collapse = " and "),
+                            "groups.")
+      }
+} else {
+      SigDif <- ""
+}
+
+tukeyStar(data = Subjects.GDM, Tukey.df = TKdf, 
+          xval = "Arm", yval = "SI.delta.NormA", 
+          barsize = 1, textsize = 6) +
+      scale_fill_manual(values = GDMColors) +
+      # theme(axis.text.y = element_text(margin = margin(0, 0, 0, -20, unit = "pt"))) +
+      ylab(Labels[["SI.delta.NormA2"]])
+
+
+```
+
+There `r yesno` a significant difference in SI between treatment arms with p = `r pval`. `r SigDif`
+
+## Change in DI, adjusted for changes in normal pregnancy
+
+```{r, fig.height = 6, fig.width = 4}
+
+rm(yesno, pval, TKdf, SigDif)
+
+ggplot(Subjects[Subjects$Arm %in% c("GDM Combo", "GDM GLY", "GDM MET"), ],
+       aes(x = DI.delta.NormA, fill = Arm)) +
+      geom_histogram(color = "white", bins = 20) +
+      geom_vline(xintercept = 0, color = "red") +
+      facet_wrap(~ Arm, ncol = 1) +
+      xlab(Labels[["DI.delta.NormA2"]]) +
+      scale_x_continuous(breaks = seq(-1000, 2000, 500)) +
+      scale_fill_manual(values = GDMColors) +
+      theme(legend.position = "none")
+
+```
+
+**Hypothesis:** When adjusted for changes that occur during a healthy pregnancy, the change in DI differs from 0. 
+
+Results from Student's t tests for each group: 
+
+```{r}
+
+Out <- sigSummary(Subjects[Subjects$DiseaseSt == "GDM", ], 
+           Param = "DI.delta.NormA",
+           ParamPretty = "DI")
+
+kable(Out[["DF"]])
+
+```
+
+`r Out[["SigDif"]]`
+
+**Hypothesis:** When adjusted for changes that occur during a healthy pregnancy, the change in DI differs between GDM treatment arms. 
+
+An ANOVA was performed to evaluate whether there was a difference in the change in DI between GDM GLY, GDM MET, and GDM Combo. Results: 
+
+```{r}
+
+rm(Out)
+
+Subjects.GDM <- Subjects[Subjects$Arm %in% c("GDM Combo", "GDM GLY", "GDM MET"), ]
+
+DI.aov <- aov(DI.delta.NormA ~ Arm, data = Subjects.GDM)
+
+pval <- starSig2(summary(DI.aov)[[1]]["Arm", "Pr(>F)"])
+
+yesno <- ifelse(str_detect(pval, "\\*"), "is", "is not")
+
+```
+```{r, fig.height = 4, fig.width = 4}
+
+TKdf <- as.data.frame(TukeyHSD(DI.aov)[[1]])
+
+TukSig <- which(TKdf$"p adj" <= SigCutoff)
+TKdf$Text <- paste0(sub("-", " and ", row.names(TKdf)), 
+                    " (p = ", starSig2(TKdf$"p adj"), ")")
+
+if(length(TukSig) > 0){
+      if(length(TukSig) == 1){
+            SigDif <- paste("Based on a Tukey post-hoc test, there was a significant difference in DI between the",
+                            TKdf$Text[TukSig], 
+                            "groups.")
+            
+      } else {
+            SigDif <- paste("Based on a Tukey post-hoc test, there was a significant difference in DI between the",
+                            str_c(TKdf$Text[TukSig], 
+                                  collapse = " and "),
+                            "groups.")
+      }
+} else {
+      SigDif <- ""
+}
+
+tukeyStar(data = Subjects.GDM, Tukey.df = TKdf, 
+          xval = "Arm", yval = "DI.delta.NormA", 
+          barsize = 1, textsize = 6) +
+      scale_fill_manual(values = GDMColors) +
+      # theme(axis.text.y = element_text(margin = margin(0, 0, 0, -15, unit = "pt"))) +
+      ylab(Labels[["DI.delta.NormA2"]])
+
+```
+
+There `r yesno` a significant different between treatment arms with p = `r pval`. `r SigDif`
+
+## All three histograms together
+
+```{r, fig.width = 9, fig.height = 7}
+
+DF <- Subjects[Subjects$Arm %in% c("GDM Combo", "GDM GLY", "GDM MET"), ]
+
+A <- ggplot(DF, aes(x = Phi.t.delta.NormA, fill = Arm)) +
+      geom_histogram(color = "white", bins = 20) +
+      geom_vline(xintercept = 0, color = "red") +
+      geom_text(data = unique(DF[, c("Arm", "DiseaseSt")]), 
+                aes(x = Inf, y = Inf, label = Arm), 
+                vjust = 1.2, hjust = 1.05) +
+      facet_wrap(~ Arm, ncol = 1) +
+      xlab(Labels[["Phi.t.delta.NormA2"]]) +
+      scale_x_continuous(breaks = seq(-1000, 2000, 500)) +
+      scale_y_continuous(breaks = seq(0, 20, 4), limits = c(0, 12)) +
+      scale_fill_manual(values = GDMColors) +
+      ggtitle(expression("Change in"~Phi["total"])) +
+      theme(legend.position = "none", 
+            strip.text = element_blank(), 
+            plot.title = element_text(hjust = 0.5))
+
+B <- ggplot(DF, aes(x = SI.delta.NormA, fill = Arm)) +
+      geom_histogram(color = "white", bins = 20) +
+      geom_vline(xintercept = 0, color = "red") +
+      geom_text(data = unique(DF[, c("Arm", "DiseaseSt")]), 
+                aes(x = Inf, y = Inf, label = Arm), 
+                vjust = 1.2, hjust = 1.05) +
+      facet_wrap(~ Arm, ncol = 1) +
+      xlab(Labels[["SI.delta.NormA2"]]) +
+      scale_x_continuous(breaks = seq(-1000, 2000, 500)) +
+      scale_y_continuous(breaks = seq(0, 20, 4), limits = c(0, 12)) +
+      scale_fill_manual(values = GDMColors) +
+      ggtitle("Change in SI") +
+      theme(legend.position = "none", 
+            strip.text = element_blank(), 
+            axis.title.y = element_blank(), 
+            plot.title = element_text(hjust = 0.5))
+
+C <- ggplot(DF, aes(x = DI.delta.NormA, fill = Arm)) +
+      geom_histogram(color = "white", bins = 20) +
+      geom_vline(xintercept = 0, color = "red") +
+      geom_text(data = unique(DF[, c("Arm", "DiseaseSt")]), 
+                aes(x = Inf, y = Inf, label = Arm), 
+                vjust = 1.2, hjust = 1.05) +
+      facet_wrap(~ Arm, ncol = 1) +
+      xlab(Labels[["DI.delta.NormA2"]]) +
+      scale_x_continuous(breaks = seq(-1000, 2000, 500)) +
+      scale_y_continuous(breaks = seq(0, 20, 4), limits = c(0, 12)) +
+      scale_fill_manual(values = GDMColors) +
+      ggtitle("Change in DI") +
+      theme(legend.position = "none", 
+            strip.text = element_blank(), 
+            axis.title.y = element_blank(), 
+            plot.title = element_text(hjust = 0.5))
+
+grid.arrange(A, B, C, ncol = 3)
+
+png("Histograms of SI Phi tot and DI.png", height=7, width=9, units="in", res=600)
+grid.arrange(A, B, C, ncol = 3)
+dev.off()
+
+
+
+```
+
+```{r, fig.width = 9.5, fig.height = 7}
+
+DF <- Subjects[Subjects$Arm %in% c("GDM Combo", "GDM GLY", "GDM MET"), ]
+
+A <- ggplot(DF, aes(x = Phi.t.delta.NormA, fill = Arm)) +
+      geom_histogram(color = "white", bins = 20) +
+      geom_vline(xintercept = 0, color = "red") +
+      # geom_text(data = unique(DF[, c("Arm", "DiseaseSt")]), 
+      #           aes(x = Inf, y = Inf, label = Arm), 
+      #           vjust = 1.2, hjust = 1.05) +
+      facet_wrap(~ Arm, ncol = 1) +
+      xlab(Labels[["Phi.t.delta.NormA2"]]) +
+      scale_x_continuous(breaks = seq(-1000, 2000, 500)) +
+      scale_y_continuous(breaks = seq(0, 20, 4), limits = c(0, 12)) +
+      scale_fill_manual(values = GDMColors) +
+      ggtitle(expression("Change in"~Phi["total"])) +
+      theme(# legend.position = "none", 
+            strip.text = element_blank(), 
+            plot.title = element_text(hjust = 0.5))
+
+B <- ggplot(DF, aes(x = SI.delta.NormA, fill = Arm)) +
+      geom_histogram(color = "white", bins = 20) +
+      geom_vline(xintercept = 0, color = "red") +
+      # geom_text(data = unique(DF[, c("Arm", "DiseaseSt")]), 
+      #           aes(x = Inf, y = Inf, label = Arm), 
+      #           vjust = 1.2, hjust = 1.05) +
+      facet_wrap(~ Arm, ncol = 1) +
+      xlab(Labels[["SI.delta.NormA2"]]) +
+      scale_x_continuous(breaks = seq(-1000, 2000, 500)) +
+      scale_y_continuous(breaks = seq(0, 20, 4), limits = c(0, 12)) +
+      scale_fill_manual(values = GDMColors) +
+      ggtitle("Change in SI") +
+      theme(legend.position = "none", 
+            strip.text = element_blank(), 
+            axis.title.y = element_blank(), 
+            plot.title = element_text(hjust = 0.5))
+
+C <- ggplot(DF, aes(x = DI.delta.NormA, fill = Arm)) +
+      geom_histogram(color = "white", bins = 20) +
+      geom_vline(xintercept = 0, color = "red") +
+      # geom_text(data = unique(DF[, c("Arm", "DiseaseSt")]), 
+      #           aes(x = Inf, y = Inf, label = Arm), 
+      #           vjust = 1.2, hjust = 1.05) +
+      facet_wrap(~ Arm, ncol = 1) +
+      xlab(Labels[["DI.delta.NormA2"]]) +
+      scale_x_continuous(breaks = seq(-1000, 2000, 500)) +
+      scale_y_continuous(breaks = seq(0, 20, 4), limits = c(0, 12)) +
+      scale_fill_manual(values = GDMColors) +
+      ggtitle("Change in DI") +
+      theme(legend.position = "none", 
+            strip.text = element_blank(), 
+            axis.title.y = element_blank(), 
+            plot.title = element_text(hjust = 0.5))
+
+
+mylegend <- g_legend(A)
+grid.arrange(arrangeGrob(A + theme(legend.position="none"), B, C, nrow=1),
+             mylegend, nrow=1, widths=c(10,1.35))
+
+png("Histograms of SI Phi tot and DI with legend.png", 
+    height=7, width=9.5, units="in", res=600)
+grid.arrange(arrangeGrob(A + theme(legend.position="none"), B, C, nrow=1),
+             mylegend, nrow=1, widths=c(10,1.35))
+dev.off()
+
+
+```
+
+# Tables of MMTT parameters
+
+```{r MeansCalculations}
+
+Visits <- gather(Visits, key = Parameter, value = Value, 
+                 -SubjID, -Tx, -DiseaseSt, -Arm, -SD, -GlyContr)
+AllGDM <- filter(Visits, DiseaseSt == "GDM", SD == "SD1") %>% mutate(Arm = "All GDM")
+
+
+# Calculating mean for all groups.
+Means.Compl <- ddply(rbind(Visits, AllGDM), c("Arm", "SD", "Parameter"), function(x) c(
+      Mean = mean(x$Value, na.rm = TRUE)
+))
+
+Visits <- spread(Visits, key = Parameter, value = Value)
+
+HPcorrection <- spread(Means.Compl[Means.Compl$Arm == "HP", ], 
+                       key = SD, value = Mean)
+HPcorrection$Adjustment <- HPcorrection$SD2 - HPcorrection$SD1
+
+```
+```{r}
+
+MMTTParam <- c("n", "SI", "Phi.t", "Phi.s", "Phi.d", "Phi.b", "DI", "PeakGluc")
+
+MMTT.Compl <- gather(Visits[, c("SubjID", "SD", "Arm",
+                                "DI", "PeakGluc",
+                                "Phi.b", "Phi.d",
+                                "Phi.s", "Phi.t", "SI")],
+                     key = Parameter, value = Value,
+                     -SubjID, -SD, -Arm)
+n <- ddply(unique(MMTT.Compl[, c("SubjID", "Arm")]),
+           c("Arm"), function(x) data.frame(MeanSD = nrow(x)))
+# The odd name "MeanSD" is to make it work with MMTT.Compl.table
+n$Parameter <- "n"
+n$SD <- "SD1"
+
+MMTT.Compl$Parameter <- factor(MMTT.Compl$Parameter, levels = MMTTParam)
+MMTT.Compl$GDM <- str_detect(MMTT.Compl$Arm, "GDM")
+MMTT.Compl <- dlply(MMTT.Compl, "GDM")
+MMTT.GDM <- MMTT.Compl[["TRUE"]]
+MMTT.nonGDM <- MMTT.Compl[["FALSE"]]
+MMTT.Compl <- rbind.fill(MMTT.Compl)
+MMTT.Compl$GDM <- NULL
+
+
+```
+
+## GDM subjects, adjusted for changes in HP
+
+To adjust for changes occurring in healthy pregnancy, for each parameter, the average difference in HP from SD1 to SD2 has been subtracted from the value measured for each GDM subject on SD2. Values listed are the mean +/- the standard deviation (95% confidence interval).   
+
+```{r}
+
+GDMtable <- dplyr::select(MMTT.GDM, -GDM) %>% spread(key = SD, value = Value) %>%
+      join(HPcorrection[, c("Parameter", "Adjustment")], by = "Parameter") %>%
+      mutate(SD2adj = SD2 - Adjustment, 
+             Diff = SD2adj - SD1) %>%
+      dplyr::select(-Adjustment, -SD2) %>% 
+      gather(key = SD, value = Value, -SubjID, -Arm, -Parameter) %>%
+      filter(complete.cases(Value))
+
+GDMtable$Parameter <- revalue(GDMtable$Parameter, 
+                              c("SI" = "SI (10-4 min-1 uU-1 mL)",
+                                "Phi.t" = "Phitotal (10-9 min-1)",
+                                "Phi.s" = "Phistatic (10-9 min-1)",
+                                "Phi.d" = "Phidynamic (10-9)",
+                                "Phi.b" = "Phibaseline (10-9 min-1)",
+                                "DI" = "DI (10-13 min-2 uU-1 mL)",
+                                "PeakGluc" = "Peak glucose (mg/dL)"))
+
+GDMttest <- GDMtable %>% filter(SD %in% c("SD1", "SD2adj")) %>%
+      spread(key = SD, value = Value) %>%
+      group_by(Arm, Parameter) %>%
+      summarize(n = length(unique(SubjID)),
+                PercDiff = paste0(100*signif(mean((SD2adj - SD1)/SD1, na.rm = T), 3), "%"),
+                pval = starSig(t.test(SD2adj, SD1, paired = TRUE)$p.value, 1))
+
+GDMtable <- GDMtable %>% group_by(Arm, SD, Parameter) %>%
+      summarize(MeanSD = mean.sd(Value, calc95CI = TRUE)) %>%
+      spread(key = SD, value = MeanSD)
+
+GDMtable <- join(as.data.frame(GDMtable), as.data.frame(GDMttest)) %>%
+      dplyr::select(Arm, n, Parameter, SD1, SD2adj, Diff, PercDiff, pval) %>%
+      mutate(Diff = paste0(Diff, " (p=", pval, ")")) %>%
+      dplyr::select(-pval) %>%
+      rename("SD2 (adjusted)" = "SD2adj",
+             "Difference (SD2 - SD1)" = "Diff",
+             "Percent difference" = "PercDiff")
+
+```
+
+### GDM Combo
+
+```{r}
+
+kable(filter(GDMtable, Arm == "GDM Combo"))
+
+
+```
+
+### GDM GLY
+
+```{r}
+
+kable(filter(GDMtable, Arm == "GDM GLY"))
+
+
+```
+
+### GDM MET
+
+```{r}
+
+kable(filter(GDMtable, Arm == "GDM MET"))
+
+
+```
+
+## All non-GDM subjects, unadjusted
+
+```{r}
+
+MMTT.nonGDM$GDM <- NULL
+MMTT.nonGDM <- spread(MMTT.nonGDM, key = SD, value = Value)
+MMTT.nonGDM$Diff <- MMTT.nonGDM$SD2 - MMTT.nonGDM$SD1
+
+MMTT.nonGDM <- gather(MMTT.nonGDM, key = SD, value = Value,
+                      -SubjID, -Arm, -Parameter)
+
+MMTT.nonGDM.table <- ddply(MMTT.nonGDM, c("Arm", "SD", "Parameter"), function(x) {
+      data.frame(
+            MeanSD = mean.sd(x$Value, calc95CI = TRUE)
+      )
+})
+
+MMTT.nonGDM <- spread(MMTT.nonGDM, key = SD, value = Value)
+MMTT.nonGDM.ttest <- ddply(MMTT.nonGDM[complete.cases(MMTT.nonGDM$SD2), ],
+                           c("Arm", "Parameter"), function(x)
+                                 data.frame(
+                                       pval = starSig2(t.test(x$SD1, x$SD2, paired = TRUE)$p.value),
+                                       Dif = mean.sd(x$SD2 - x$SD1, calc95 = TRUE),
+                                       PercDif = mean.sd((x$SD2 - x$SD1)/x$SD1),
+                                       FoldChange = mean.sd((x$SD2/x$SD1))
+                                 ))
+MMTT.nonGDM.table[sapply(MMTT.nonGDM.table, is.factor)] <-
+      lapply(MMTT.nonGDM.table[sapply(MMTT.nonGDM.table, is.factor)], as.character)
+
+MMTT.nonGDM.ttest$SD <- "Diff"
+MMTT.nonGDM.table <- join(MMTT.nonGDM.table, MMTT.nonGDM.ttest[, c("Arm", "Parameter", "SD",
+                                                                   "pval")])
+MMTT.nonGDM.table$MeanSD[MMTT.nonGDM.table$SD == "Diff"] <-
+      paste0(MMTT.nonGDM.table$MeanSD[MMTT.nonGDM.table$SD == "Diff"], " (p=",
+             MMTT.nonGDM.table$pval[MMTT.nonGDM.table$SD == "Diff"], ")")
+MMTT.nonGDM.table$pval <- NULL
+
+MMTT.nonGDM.table <- rbind.fill(MMTT.nonGDM.table, n[n$Arm %in% c("HP", "T2DM"), ])
+
+MMTT.nonGDM.table$ArmSD <- paste(MMTT.nonGDM.table$Arm, MMTT.nonGDM.table$SD, sep = ".")
+MMTT.nonGDM.table$SD <- factor(MMTT.nonGDM.table$SD, levels = c("SD1", "SD2",
+                                                                "Diff"))
+MMTT.nonGDM.table$Arm <- factor(MMTT.nonGDM.table$Arm, levels = c("HP", "T2DM"))
+MMTT.nonGDM.table$Parameter <- factor(MMTT.nonGDM.table$Parameter,
+                                      levels = MMTTParam)
+MMTT.nonGDM.table <- arrange(MMTT.nonGDM.table, Arm, SD, Parameter)
+MMTT.nonGDM.table$ArmSD <- factor(MMTT.nonGDM.table$ArmSD,
+                                  levels = unique(MMTT.nonGDM.table$ArmSD))
+
+MMTT.nonGDM.table <- spread(MMTT.nonGDM.table[, c("Parameter", "MeanSD", "ArmSD")],
+                            key = ArmSD, value = MeanSD)
+
+kable(MMTT.nonGDM.table)
+
+```
+
+# Figure 1: PD plots
+
+The following are concentration-time plots for glucose, insulin, and C-peptide for all subjects who completed the study and were adherent. 
+
+```{r}
+
+ConcTime.allSD1 <- read.xlsx("Mean Glucose Insulin and Cpeptide Plots (plus HP subjects) 19Aug2017.xlsx", 
+                             sheetName = "All SD1", stringsAsFactors = FALSE)
+names(ConcTime.allSD1) <- c("Arm", "SubjID", "SD", "Time", "Glucose", "Insulin", "Cpep")
+
+ConcTime.Combo <- read.xlsx("Mean Glucose Insulin and Cpeptide Plots (plus HP subjects) 19Aug2017.xlsx", 
+                            sheetName = "Combo SD2", stringsAsFactors = FALSE)
+names(ConcTime.Combo) <- c("SubjID", "SD", "Time", "Glucose", "Insulin", "Cpep")
+ConcTime.Combo$Arm <- "COMBO"
+
+ConcTime.MET <- read.xlsx("Mean Glucose Insulin and Cpeptide Plots (plus HP subjects) 19Aug2017.xlsx", 
+                          sheetName = "MET SD2", stringsAsFactors = FALSE)
+names(ConcTime.MET) <- c("SubjID", "SD", "Time", "Glucose", "Insulin", "Cpep")
+ConcTime.MET$Arm <- "MET"
+
+ConcTime.GLY <- read.xlsx("Mean Glucose Insulin and Cpeptide Plots (plus HP subjects) 19Aug2017.xlsx", 
+                          sheetName = "GLY SD2", stringsAsFactors = FALSE)
+names(ConcTime.GLY) <- c("SubjID", "SD", "Time", "Glucose", "Insulin", "Cpep")
+ConcTime.GLY$Arm <- "GLY"
+
+ConcTime.HP1 <- read.xlsx("Mean Glucose Insulin and Cpeptide Plots (plus HP subjects) 19Aug2017.xlsx", 
+                          sheetName = "HP SD1", stringsAsFactors = FALSE)
+ConcTime.HP2 <- read.xlsx("Mean Glucose Insulin and Cpeptide Plots (plus HP subjects) 19Aug2017.xlsx", 
+                          sheetName = "HP SD2", stringsAsFactors = FALSE)
+ConcTime.HP <- rbind(ConcTime.HP1, ConcTime.HP2)
+names(ConcTime.HP) <- c("SubjID", "SD", "Time", "Glucose", "Insulin", "Cpep")
+ConcTime.HP$Arm <- "HP"
+
+ConcTime <- rbind(ConcTime.allSD1, ConcTime.Combo, ConcTime.MET, ConcTime.GLY, ConcTime.HP)
+ConcTime$Arm <- NULL
+ConcTime$SubjID <- str_trim(ConcTime$SubjID)
+ConcTime <- join(ConcTime, Subjects[, c("SubjID", "Arm")])
+
+ConcTime$Time <- as.numeric(ConcTime$Time)
+ConcTime$Glucose <- as.numeric(ConcTime$Glucose)
+ConcTime$Insulin <- as.numeric(ConcTime$Insulin)
+ConcTime$Cpep <- as.numeric(ConcTime$Cpep)
+
+ConcTime$Time.nominal[ConcTime$Time < 5] <- 0
+ConcTime$Time.nominal[ConcTime$Time >= 5 & ConcTime$Time < 15] <- 10
+ConcTime$Time.nominal[ConcTime$Time >= 15 & ConcTime$Time < 25] <- 20
+ConcTime$Time.nominal[ConcTime$Time >= 25 & ConcTime$Time < 45] <- 30
+ConcTime$Time.nominal[ConcTime$Time >= 45 & ConcTime$Time < 75] <- 60
+ConcTime$Time.nominal[ConcTime$Time >= 75 & ConcTime$Time < 105] <- 90
+ConcTime$Time.nominal[ConcTime$Time >= 105 & ConcTime$Time < 135] <- 120
+ConcTime$Time.nominal[ConcTime$Time >= 135 & ConcTime$Time < 165] <- 150
+ConcTime$Time.nominal[ConcTime$Time >= 165 & ConcTime$Time < 195] <- 180
+ConcTime$Time.nominal[ConcTime$Time >= 195 & ConcTime$Time < 225] <- 210
+ConcTime$Time.nominal[ConcTime$Time >= 225 & ConcTime$Time < 290] <- 240
+# Subject 02031720S had no time points at 210 or 240 on SD2. However,
+# she did have measurements at 280 and 380. I think that 280 is close enough
+# to 240 to include, but we should omit the 380 point. Leaving that as NA.
+
+ConcTime <- gather(ConcTime, key = Analyte, value = Concentration, 
+                   -Arm, -SubjID, -SD, -Time, -Time.nominal)
+ConcTime$Analyte <- revalue(ConcTime$Analyte, c("Cpep" = "C-peptide"))
+
+ConcTime$AnalyteTitle <- revalue(ConcTime$Analyte, 
+                                 c("Glucose" = "Glucose (mg/dL)",
+                                   "C-peptide" = "C-peptide (pmol/L)",
+                                   "Insulin" = "Insulin (uU/mL)"))
+
+```
+
+```{r, fig.width = 7, fig.height = 6}
+checkDataPlot <- function(DF, Arm) {
+      DF <- DF[DF$SubjID %in% Subj.Compl &
+                     DF$Arm == Arm, ]
+      
+      ggplot(DF, aes(x = Time, y = Concentration, group = SubjID,
+                     color = Arm)) +
+            geom_point(alpha = 0.25) + geom_line(alpha = 0.25) +
+            facet_grid(Analyte ~ SD, scales = "free") +
+            ggtitle(Arm) +
+            scale_color_manual(values = GDMColors)
+}
+
+# checkDataPlot(ConcTime, "GDM Combo")
+
+```
+
+```{r, fig.width = 7, fig.height = 6}
+# checkDataPlot(ConcTime, "GDM GLY")
+
+```
+
+```{r, fig.width = 7, fig.height = 6}
+# checkDataPlot(ConcTime, "GDM MET")
+
+# ch <- ConcTime[ConcTime$SubjID == "02031720S", ]
+# 
+# checkDataPlot(ch, "GDM MET") +
+#       geom_vline(xintercept = unique(ConcTime$Time.nominal), 
+#                  alpha = 0.2)
+# 
+
+```
+
+```{r, fig.width = 7, fig.height = 6}
+
+# checkDataPlot(ConcTime, "HP")
+
+```
+
+```{r}
+
+AUCs.Compl <- ddply(ConcTime[ConcTime$SubjID %in% Subj.Compl, ], 
+                    c("AnalyteTitle", "Arm", "SubjID", "SD"),
+                    function(x) data.frame(
+                          AUC = noncompAUC(x, "MeanConc", "Time.nominal")
+                    ))
+
+AUCs.Compl$SD <- revalue(as.character(AUCs.Compl$SD),
+                         c("1" = "SD1", "2" = "SD2"))
+AUCs.Compl <- spread(AUCs.Compl, key = SD, value = AUC)
+AUCs.Compl$Diff <- AUCs.Compl$SD2 - AUCs.Compl$SD1
+AUCs.Compl.ttest <- ddply(AUCs.Compl, c("AnalyteTitle", "Arm"), function(x)
+      data.frame(
+            Mean.AUC.SD1 = mean.sd(x$SD1),
+            Mean.AUC.SD2 = mean.sd(x$SD2),
+            Mean.AUC.Difference = mean.sd(x$Diff),
+            Diff95CI = paste(signif(t.test(x$SD1, x$SD2, 
+                                           paired = TRUE)$conf.int[1], 2), 
+                             "to",
+                             signif(t.test(x$SD1, x$SD2, 
+                                           paired = TRUE)$conf.int[2], 2)),
+            pval = starSig2(t.test(x$SD1, x$SD2, paired = TRUE)$p.value))
+)
+
+
+# Adding columns for inserting into results text. 
+AUCs.Compl.ttest$Units <- "mg\\*min/dL" # glucose
+AUCs.Compl.ttest$Units[AUCs.Compl.ttest$Analyte == "C-peptide (pmol/L)"] <-
+      "pmol\\*min/dL"
+AUCs.Compl.ttest$Units[AUCs.Compl.ttest$Analyte == "Insulin (uU/mL)"] <-
+      "uU\\*min/dL"
+
+AUCs.Compl.ttest$Text <- paste0("difference: ", 
+                                AUCs.Compl.ttest$Mean.AUC.Difference, " (",
+                                AUCs.Compl.ttest$Diff95CI, ") ",
+                                AUCs.Compl.ttest$Units, ", p = ",
+                                AUCs.Compl.ttest$pval)
+
+
+```
+```{r ConcTimecomplsubj, fig.width = 9, fig.height = 5}
+ConcTime.nom.compl <- ddply(ConcTime[ConcTime$SubjID %in% Subj.Compl, ], 
+                            c("Arm", "SD", "Time.nominal", "AnalyteTitle"),
+                            function(x) c(
+                                  MeanConc = mean(x$Concentration, na.rm = TRUE),
+                                  SDConc = sd(x$Concentration, na.rm = TRUE)
+                            ))
+
+ConcTime.nom.compl$Ymax <- NA
+ConcTime.nom.compl$Ymax[ConcTime.nom.compl$SD == 2] <- ConcTime.nom.compl$MeanConc[ConcTime.nom.compl$SD == 2]
+ConcTime.nom.compl$Ymax[ConcTime.nom.compl$SD == 1] <- ConcTime.nom.compl$MeanConc[ConcTime.nom.compl$SD == 1] + 
+      ConcTime.nom.compl$SDConc[ConcTime.nom.compl$SD == 1]
+ConcTime.nom.compl$Ymin[ConcTime.nom.compl$SD == 1] <- ConcTime.nom.compl$MeanConc[ConcTime.nom.compl$SD == 1]
+ConcTime.nom.compl$Ymin[ConcTime.nom.compl$SD == 2] <- ConcTime.nom.compl$MeanConc[ConcTime.nom.compl$SD == 2] -
+      ConcTime.nom.compl$SDConc[ConcTime.nom.compl$SD == 2]
+
+ConcTime.nom.compl$SD <- as.factor(ConcTime.nom.compl$SD)
+
+ConcTime.count <- ddply(ConcTime[ConcTime$SubjID %in% Subj.All, ],
+                        "Arm", function(x) data.frame(
+                              Count = length(unique(x$SubjID))
+                        ))
+ConcTime.nom.compl <- join(ConcTime.nom.compl, ConcTime.count)
+ConcTime.nom.compl$FacetTitle <- paste0(ConcTime.nom.compl$Arm, "\nn = ", 
+                                        ConcTime.nom.compl$Count)
+
+ErrWidth <- 10
+ConcTime.nom.compl$Xmin <- ConcTime.nom.compl$Time.nominal - 0.5*ErrWidth
+ConcTime.nom.compl$Xmax <- ConcTime.nom.compl$Time.nominal + 0.5*ErrWidth
+ConcTime.nom.compl$Ypos[ConcTime.nom.compl$SD == 1] <- ConcTime.nom.compl$Ymax[ConcTime.nom.compl$SD == 1]
+ConcTime.nom.compl$Ypos[ConcTime.nom.compl$SD == 2] <- ConcTime.nom.compl$Ymin[ConcTime.nom.compl$SD == 2]
+
+# Adding FacetTitle
+AUCs.Compl.ttest <- join(AUCs.Compl.ttest, 
+                         unique(ConcTime.nom.compl[, c("Arm", "FacetTitle")]))
+AUCs.Compl.ttest$pval <- paste("p = ", str_replace_all(AUCs.Compl.ttest$pval, "\\\\", ""))
+
+ggplot(ConcTime.nom.compl,
+       aes(x = Time.nominal, y = MeanConc, color = Arm,
+           shape = SD, linetype = SD)) + 
+      geom_errorbar(aes(x = Time.nominal, ymax = Ymax, 
+                        ymin = Ymin), width = 0) +
+      geom_segment(data = ConcTime.nom.compl, 
+                   aes(x = Xmin, xend = Xmax, y = Ypos, yend = Ypos)) +
+      geom_point() + geom_line() + 
+      scale_shape_manual(values = c(16, 1)) +
+      scale_color_manual(values = c("mediumseagreen",
+                                    "deepskyblue2", "mediumpurple3",
+                                    "black")) +
+      facet_grid(AnalyteTitle ~ FacetTitle, scales = "free", switch = "y") +
+      geom_text(data = unique(AUCs.Compl.ttest), aes(x = Inf, y = Inf, 
+                                                     label = pval), 
+                inherit.aes = FALSE, vjust = 1.75, hjust = 1.2, 
+                size = 2.75) +
+      xlab("Time (min)") +
+      scale_x_continuous(breaks = seq(0, 360, 60)) +
+      ylab("Mean concentration") +
+      labs(shape = "Study Day", linetype = "Study Day") +
+      # guides(color = FALSE) +
+      theme(axis.title.y = element_blank(),
+            strip.placement = "outside", 
+            strip.switch.pad.grid = unit(0.5, "pt"))
+
+ggsave("Glucose, insulin, and C-peptide mean PD plots v3 - all subjects who completed and were adherent.png", 
+       width = 9, height = 5, dpi = 600)
+
+```
+
+**Text to be corrected in the manuscript:**
+
+*Glucose, Insulin and C-Peptide Concentrations.* Average serum concentration-time profiles for glucose, insulin, and C-peptide during a four-hour MMTT are shown in Figure 1 for subjects with GDM and HP subjects on study day 1 (SD1, pre-treatment for subjects with GDM) and study day 2 (SD2, during treatment for subjects with GDM) for only those subjects who completed the study and were adherent.  For these subjects, mean glucose AUCs were lower on SD2 in the GDM Combo (`r AUCs.Compl.ttest$Text[AUCs.Compl.ttest$Analyte == "Glucose (mg/dL)" & AUCs.Compl.ttest$Arm == "GDM Combo"]`) and GDM MET (`r AUCs.Compl.ttest$Text[AUCs.Compl.ttest$Analyte == "Glucose (mg/dL)" & AUCs.Compl.ttest$Arm == "GDM MET"]`) groups, and unchanged in the GDM GLY (`r AUCs.Compl.ttest$Text[AUCs.Compl.ttest$Analyte == "Glucose (mg/dL)" & AUCs.Compl.ttest$Arm == "GDM GLY"]`) and HP (`r AUCs.Compl.ttest$Text[AUCs.Compl.ttest$Analyte == "Glucose (mg/dL)" & AUCs.Compl.ttest$Arm == "HP"]`) groups (Figure 1). Mean insulin AUCs were unchanged between study days 1 and 2 in the GDM COMBO, GDM GLY, and HP groups for subjects who completed the study and were adherent.  Insulin AUCs on SD2 trended towards being lower at the 95% confidence level for the GDM MET group (`r AUCs.Compl.ttest$Text[AUCs.Compl.ttest$Analyte == "Insulin (uU/mL)" & AUCs.Compl.ttest$Arm == "GDM MET"]`).  Mean C-peptide AUCs were similar before and with treatment in the GDM COMBO group (`r AUCs.Compl.ttest$Text[AUCs.Compl.ttest$Analyte == "C-peptide (pmol/L)" & AUCs.Compl.ttest$Arm == "GDM Combo"]`) and in the GDM MET group (`r AUCs.Compl.ttest$Text[AUCs.Compl.ttest$Analyte == "C-peptide (pmol/L)" & AUCs.Compl.ttest$Arm == "GDM MET"]`).  However, GDM GLY and HP groups on SD2, had significantly larger C-peptide AUCs than on SD1 (GDM GLY: `r AUCs.Compl.ttest$Text[AUCs.Compl.ttest$Analyte == "C-peptide (pmol/L)" & AUCs.Compl.ttest$Arm == "GDM GLY"]`; HP: `r AUCs.Compl.ttest$Text[AUCs.Compl.ttest$Analyte == "C-peptide (pmol/L)" & AUCs.Compl.ttest$Arm == "HP"]` (Figure 1).  
+
+# Vector plots
+
+## &Phi; total and SI on both study days, unadjusted
+
+The plot below depicts the mean Phi total and mean SI on both study days for each treatment arm. 
+
+
+```{r, fig.height = 3.5, fig.width = 5}
+
+Means <- spread(Means.Compl, key = Parameter, value = Mean)
+
+Means.SI <- Means.Compl[Means.Compl$Parameter == "SI", 
+                        c("Arm", "SD", "Mean")]
+Means.SI <- spread(Means.SI, key = "SD", value = "Mean")
+Means.SI <- plyr::rename(Means.SI, c("SD1" = "SD1.SI",
+                                     "SD2" = "SD2.SI"))
+
+Means.Phi.t <- Means.Compl[Means.Compl$Parameter == "Phi.t", 
+                           c("Arm", "SD", "Mean")]
+Means.Phi.t <- spread(Means.Phi.t, key = "SD", value = "Mean")
+Means.Phi.t <- plyr::rename(Means.Phi.t, c("SD1" = "SD1.Phi.t",
+                                           "SD2" = "SD2.Phi.t"))
+Means.segments <- join(Means.Phi.t, Means.SI)
+
+ggplot(filter(Means, Arm != "All GDM"), aes(x = SI, y = Phi.t, color = Arm,
+                  shape = SD, group = Arm)) +
+      geom_point() + 
+      geom_segment(data = filter(Means.segments, Arm != "All GDM"),
+                   aes(x = SD1.SI, xend = SD2.SI,
+                       y = SD1.Phi.t, yend = SD2.Phi.t,
+                       color = Arm),
+                   arrow = arrow(angle = 30, ends = "last",
+                                 length = unit(0.03, "npc")),
+                   inherit.aes = FALSE) +
+      scale_shape_manual(values = c(16, 1)) +
+      scale_color_manual(values = GDMColors) +
+      labs(shape = "Study day") +
+      guides(colour = guide_legend(order = 1), 
+             shape = guide_legend(order = 2)) +
+      xlab(Labels[["SI2"]]) +
+      ylab(Labels[["Phi.t2"]]) +
+      theme(
+            # axis.text.y = element_text(margin = margin(0, 0, 0, -15, unit = "pt")),
+            axis.text.x = element_text(margin = margin(0, 0, -2, 0, unit = "pt")))
+
+```
+
+**A note regarding plots with the mean &Phi; total and the mean SI as well as the mean DI:** The formula for a hyperbola is $y = \frac{b}{x}$ or, for our purposes, $\Phi_t = \frac{DI}{SI}$. If, for some group of subjects, we plot a point at x = mean(SI) and y = mean(&Phi;) and then plot a curve where we input a range of SI values and then use the mean(DI) to calculate what &Phi; should be at each of those points to generate the line, that point we plotted *will not lie exactly on the line*. This comes down to an arcane bit of math: the product of means and the mean of products are not commutative. In math terms, this is what I'm saying: $$\left(\frac{1}{n}\displaystyle\sum_{i=1}^n x_i \right) \left(\frac{1}{n} \displaystyle\sum_{i=1}^n y_i \right) \neq \frac{1}{n}\displaystyle\sum_{i=1}^n x_i y_i$$
+
+For this reason, the line I'm showing is *not* the mean disposition index for each group; it is the product of the mean SI and the mean &Phi;. Just wanted to be absolutely clear. 
+
+## Figure 2: Mean HP DI curves for SD1 and SD2
+
+The plot below depicts the mean &Phi; total and mean SI on both study days for healthy pregnant subjects.
+
+
+Here is the plot with the limits of the axes set as they were in the manuscript draft from 3/15/18:  
+
+```{r, fig.width = 4, fig.height = 4}
+
+# p value from paired Student's t test performed above and adjusted 
+# for multiple testing (5 study arms) using Holm method
+pval <- MMTT.nonGDM.ttest$pval[MMTT.nonGDM.ttest$Arm == "HP" &
+                                         MMTT.nonGDM.ttest$Parameter == "DI"]
+pval <- str_replace_all(pval, "\\\\", "")
+
+HP <- Means.Compl[Means.Compl$Arm == "HP" &
+                        Means.Compl$Parameter %in% c("DI", "SI"), ]
+HP$SDv2[HP$SD == "SD1"] <- 
+      paste("SD1:", mean.sd(Visits$GestAge[Visits$Arm == "HP" &
+                                                 Visits$SD == "SD1"]), 
+            # format(round(mean(Visits$GestAge[Visits$Arm == "HP" &
+            #                                        Visits$SD == "SD1"]), 1), nsmall = 1),
+            # "\u00B1",
+            # format(round(sd(Visits$GestAge[Visits$Arm == "HP" &
+            #                                      Visits$SD == "SD1"]), 1), nsmall = 1),
+            "weeks")
+HP$SDv2[HP$SD == "SD2"] <- 
+      paste("SD2:", mean.sd(Visits$GestAge[Visits$Arm == "HP" &
+                                                 Visits$SD == "SD2"]),
+            # format(round(mean(Visits$GestAge[Visits$Arm == "HP" &
+            #                                                Visits$SD == "SD2"]), 1), nsmall = 1),
+            # "\u00B1",
+            # format(round(sd(Visits$GestAge[Visits$Arm == "HP" &
+            #                                      Visits$SD == "SD2"]), 1), nsmall = 1),
+            "weeks")
+
+HP <- spread(HP, key = Parameter, value = Mean)
+
+# Need to use Phi.t calculated from mean DI and mean SI rather than 
+# just using the mean Phi.t b/c means are not commutative.
+HP$Phi.t <- HP$DI/HP$SI
+
+
+# Adding points for the curves
+SIforCurve <- c(seq(0, 0.2, by = 0.001), seq(0.2, 2, by = 0.01), seq(2, 25, by=0.5))
+
+Curve <- data.frame(SI = rep(SIforCurve, 2),
+                    Arm = "HP",
+                    SD = rep(c("SD1", "SD2"), each = length(SIforCurve)))
+Curve$DI[Curve$SD == "SD1"] <-
+      Means.Compl$Mean[Means.Compl$SD == "SD1" &
+                             Means.Compl$Arm == "HP" &
+                             Means.Compl$Parameter == "DI"]
+Curve$DI[Curve$SD == "SD2"] <-
+      Means.Compl$Mean[Means.Compl$SD == "SD2" &
+                             Means.Compl$Arm == "HP" &
+                             Means.Compl$Parameter == "DI"]
+Curve$Phi.t <- Curve$DI/Curve$SI
+
+HP.arrows <- gather(HP[, c("Arm", "SD", "Phi.t", "SI")], 
+                    key = "Parameter", value = "Mean", 
+                    -Arm, -SD)
+HP.arrows$Parameter <- paste(HP.arrows$SD, HP.arrows$Parameter, sep = ".")
+HP.arrows$SD <- NULL
+HP.arrows <- spread(HP.arrows, key = Parameter, value = Mean)
+
+HP$SD <- NULL
+
+ggplot(HP, aes(x = SI, y = Phi.t, shape = SDv2, group = Arm)) +
+      geom_line(data = subset(Curve, Arm == "HP" & SD == "SD1"),
+                aes(x = SI, y = Phi.t),
+                inherit.aes = FALSE, size = 1.15) +
+      geom_line(data = subset(Curve, Arm == "HP" & SD == "SD2"),
+                aes(x = SI, y = Phi.t),
+                inherit.aes = FALSE, linetype = "dashed", size = 1.15) +
+      geom_point(size = 2, stroke = 1.25) +
+      geom_segment(data = HP.arrows,
+                   aes(x = SD1.SI, xend = SD2.SI,
+                       y = SD1.Phi.t, yend = SD2.Phi.t),
+                   arrow = arrow(angle = 30, ends = "last",
+                                 length = unit(0.03, "npc")),
+                   inherit.aes = FALSE, size = 1.15) +
+      scale_shape_manual(values = c(16, 1)) +
+      xlab(Labels[["SI"]]) +
+      ylab(Labels[["Phi.t"]]) +
+      coord_cartesian(xlim = c(4, 15), ylim =c(25, 225)) +
+      # scale_x_continuous(expand = c(0, 0)) +
+      scale_y_continuous(expand = c(0, 0)) +
+      annotate("text", x = 12, y = 150, label = paste("p =", pval)) + 
+      labs(shape = "Study Day") +
+      xlab(Labels[["SI2"]]) +
+      ylab(Labels[["Phi.t2"]]) +
+      theme(
+            # axis.text.y = element_text(margin = margin(0, 0, 0, -15,
+            #                                            unit = "pt")),
+            legend.position = c(0.7, 0.85))
+
+ggsave("Figure 1 HP subject DI trajectory - original axes.png",
+       height = 4, width = 4, dpi = 600)
+
+```
+
+Here is the plot with the limits of the axes set to match the other axes we used for the GDM and T2DM plots:  
+
+```{r, fig.width = 4, fig.height = 4}
+
+ggplot(HP, aes(x = SI, y = Phi.t, shape = SDv2, group = Arm)) +
+      geom_line(data = subset(Curve, Arm == "HP" & SD == "SD1"),
+                aes(x = SI, y = Phi.t),
+                inherit.aes = FALSE, size = 1.15) +
+      geom_line(data = subset(Curve, Arm == "HP" & SD == "SD2"),
+                aes(x = SI, y = Phi.t),
+                inherit.aes = FALSE, linetype = "dashed", size = 1.15) +
+      geom_point(size = 2, stroke = 1.25) +
+      geom_segment(data = HP.arrows,
+                   aes(x = SD1.SI, xend = SD2.SI,
+                       y = SD1.Phi.t, yend = SD2.Phi.t),
+                   arrow = arrow(angle = 30, ends = "last",
+                                 length = unit(0.03, "npc")),
+                   inherit.aes = FALSE, size = 1.15) +
+      scale_shape_manual(values = c(16, 1)) +
+      xlab(Labels[["SI"]]) +
+      ylab(Labels[["Phi.t"]]) +
+      coord_cartesian(xlim = c(0, 15),
+                      ylim = c(10, 150)) +
+      scale_x_continuous(expand = c(0, 0)) +
+      scale_y_continuous(expand = c(0, 0)) +
+      annotate("text", x = 11, y = 130, label = paste("p =", pval)) + 
+      labs(shape = "Study Day") +
+      xlab(Labels[["SI2"]]) +
+      ylab(Labels[["Phi.t2"]]) +
+      theme(
+            # axis.text.y = element_text(margin = margin(0, 0, 0, -15,
+            #                                            unit = "pt")),
+            legend.position = c(0.35, 0.2))
+
+ggsave("Figure 1 HP subject DI trajectory.png",
+       height = 4, width = 4, dpi = 600)
+
+
+```
+
+## Figure 3: &Phi; total and SI on both study days, adjusted for changes in healthy pregnancy
+
+The plot below depicts the mean &Phi; total and mean SI on both study days. The changes in &Phi; total and SI that occur during normal pregnancy have been subtracted from SD2, so these data *have* been adjusted for changes in healthy pregnancy. The DI curve for all GDM subjects on SD1 is shown in gray, and the DI curve for HP subjects on SD1 is shown in black. For both curves, the DI value used to generate the line was the product of the mean SI and the mean &Phi; total and *not* the mean DI.  
+
+
+```{r, fig.width = 5.25, fig.height = 4}
+
+rm(Means.SI, Means.Phi.t, Means, Means.segments)
+
+# Per MH request, subtracting the HP vector from the GDM groups.
+Means.Compl <- spread(Means.Compl, key = "SD", value = "Mean")
+Means.Compl <- join(Means.Compl, HPcorrection[, c("Parameter", "Adjustment")])
+Means.Compl$SD2.adj <- Means.Compl$SD2 - Means.Compl$Adjustment
+Means.Compl$Adjustment <- NULL
+
+Means.Compl <- gather(Means.Compl, key = "SD", value = "Mean", 
+                      -Arm, -Parameter)
+
+Means.Phi.t <- Means.Compl[Means.Compl$Parameter == "Phi.t", 
+                           c("Arm", "SD", "Mean")]
+Means.SI <- Means.Compl[Means.Compl$Parameter == "SI", 
+                        c("Arm", "SD", "Mean")]
+
+Means.SI <- spread(Means.SI, key = "SD", value = "Mean")
+Means.SI <- plyr::rename(Means.SI, c("SD1" = "SD1.SI",
+                                     "SD2" = "SD2.SI",
+                                     "SD2.adj" = "SD2adj.SI"))
+Means.Phi.t <- spread(Means.Phi.t, key = "SD", value = "Mean")
+Means.Phi.t <- plyr::rename(Means.Phi.t, c("SD1" = "SD1.Phi.t",
+                                           "SD2" = "SD2.Phi.t",
+                                           "SD2.adj" = "SD2adj.Phi.t"))
+Means.segments <- join(Means.Phi.t, Means.SI)
+Means.segments <- Means.segments[str_detect(Means.segments$Arm, "GDM"), ]
+
+Means.Compl$SD <- revalue(Means.Compl$SD, c("SD2.adj" = "SD2, adjusted"))
+
+hyperbola <- function(DI, SI) {
+      DI/SI
+}
+
+Means.Compl <- spread(Means.Compl, key = Parameter, value = Mean)
+Means.Compl$DI.ProdOfMeans <- Means.Compl$SI * Means.Compl$Phi.t
+# REmoving empty rows for All GDM SD2
+Means.Compl <- filter(Means.Compl, complete.cases(Phi.t))
+
+SIforCurve <- c(seq(0, 0.2, by = 0.001),
+                seq(0.2, 2, by = 0.01),
+                seq(2, 25, by = 0.5))
+
+Curve <- data.frame(SI = rep(rep(SIforCurve, 6), 3),
+                    Arm = rep(c(as.character(Groups$Arm)),
+                              each = 3*length(SIforCurve)),
+                    SD = rep(rep(c("SD1", "SD2", "SD2, adjusted"), each = length(SIforCurve)), 
+                             length(Groups$Arm)))
+
+Curve$Phi.t <- NA
+
+Curve <- dlply(Curve, c("SD", "Arm"))
+Means.Compl <- dlply(Means.Compl, c("SD", "Arm"))
+Curve <- Curve[names(Curve)[names(Curve) %in% names(Means.Compl)]]
+
+for (i in names(Curve)){
+      Curve[[i]]$Phi.t <- hyperbola(as.numeric(Means.Compl[[i]]$DI.ProdOfMeans),
+                                    Curve[[i]]$SI)
+}
+
+Curve <- rbind.fill(Curve)
+Means.Compl <- rbind.fill(Means.Compl)
+
+# Replacing Inf with 1000 since that's off the graphs. 
+Curve$Phi.t[Curve$Phi.t == Inf] <- 1000
+
+if("All GDM" %in% names(GDMColors) == FALSE){
+      GDMColors <- c(GDMColors, "gray50")
+      names(GDMColors)[length(GDMColors)] <- "All GDM"
+}
+
+```
+```{r}
+
+GDMAdj <- Means.Compl[Means.Compl$SD != "SD2" &
+                            Means.Compl$Arm %in% c("GDM Combo", 
+                                                   "GDM MET", 
+                                                   "GDM GLY"), ]
+GDMAdj$SD <- revalue(GDMAdj$SD, c("SD2, adjusted" = "SD2"))
+
+Labels[["SI.Adj2"]] <- expression(atop("Adjusted insulin sensitivity index",
+                                       paste("("*10^-4~"min"^-1~mu*"U"^-1~" mL)")))
+Labels[["Phi.t.Adj2"]] <- expression(atop("Adjusted" ~ beta ~ "cell responsivity",
+                                          paste("("*Phi["total"]*","~10^-9~"min"^-1*")")))
+
+```
+```{r}
+
+Main <- ggplot(GDMAdj, 
+               aes(x = SI, y = Phi.t, color = Arm,
+                   shape = SD, group = Arm)) +
+      geom_line(data = Curve[Curve$Arm == "HP" &
+                                   Curve$SD == "SD1", ],
+                aes(x = SI, y = Phi.t, color = Arm,
+                    group = Arm), inherit.aes = TRUE, size = 1.15) +
+      geom_line(data = Curve[Curve$Arm == "All GDM" &
+                                   Curve$SD == "SD1", ],
+                aes(x = SI, y = Phi.t, color = Arm,
+                    group = Arm), inherit.aes = TRUE, size = 1.15) +
+      coord_cartesian(xlim = c(0, 15),
+                      ylim = c(10, 150)) +
+      geom_point(size = 2, stroke = 1.25) +
+      geom_segment(data = Means.segments,
+                   aes(x = SD1.SI, xend = SD2adj.SI,
+                       y = SD1.Phi.t, yend = SD2adj.Phi.t,
+                       color = Arm),
+                   arrow = arrow(angle = 30, ends = "last",
+                                 length = unit(0.03, "npc")),
+                   inherit.aes = FALSE, size = 1.15) +
+      scale_x_continuous(expand = c(0, 0)) +
+      scale_y_continuous(expand = c(0, 0)) +
+      scale_shape_manual(values = c(16, 1)) +
+      scale_color_manual(values = GDMColors) +
+      guides(colour = guide_legend(order = 1), 
+             shape = guide_legend(order = 2)) +
+      xlab(Labels[["SI2"]]) +
+      ylab(Labels[["Phi.t2"]]) +
+      # xlab(NULL) + ylab(NULL) +
+      theme(
+            # axis.text.y = element_text(margin = margin(0, 0, 0, -15,
+            #                                            unit = "pt")), 
+            legend.position = "none")
+
+A <- ggplot(GDMAdj, 
+            aes(x = SI, y = Phi.t, color = Arm,
+                shape = SD, group = Arm)) +
+      geom_point(size = 2, stroke = 1.25) +
+      geom_segment(data = Means.segments,
+                   aes(x = SD1.SI, xend = SD2adj.SI,
+                       y = SD1.Phi.t, yend = SD2adj.Phi.t,
+                       color = Arm),
+                   arrow = arrow(angle = 30, ends = "last",
+                                 length = unit(0.03, "npc")),
+                   inherit.aes = FALSE, size = 1.15) +
+      guides(colour = guide_legend(order = 2), 
+             shape = guide_legend(order = 1)) +
+      scale_shape_manual(values = c(16, 1)) +
+      scale_color_manual(values = GDMColors) +
+      labs(shape = "Study day") +
+      theme(legend.justification = c(0, 0.85))
+
+B <- ggplot(GDMAdj, 
+            aes(x = SI, y = Phi.t, color = Arm, group = Arm)) +
+      geom_line(data = Curve[Curve$Arm == "HP" &
+                                   Curve$SD == "SD1", ],
+                aes(x = SI, y = Phi.t, color = Arm,
+                    group = Arm), inherit.aes = TRUE, size = 1.15) +
+      geom_line(data = Curve[Curve$Arm == "All GDM" &
+                                   Curve$SD == "SD1", ],
+                aes(x = SI, y = Phi.t, color = Arm,
+                    group = Arm), inherit.aes = TRUE, size = 1.15) +
+      scale_color_manual(values = GDMColors, 
+                         breaks = c("All GDM", "HP"), 
+                         labels = c("DI All GDM SD1",
+                                    "DI HP SD1")) +
+      labs(color = NULL)
+
+
+LegendA <- g_legend(A)
+LegendB <- g_legend(B)
+
+library(gtable)
+leg2 <- LegendB$grobs[[1]]
+leg <- gtable_add_rows(LegendA, pos = nrow(LegendA) - 1,
+                       heights = sum(leg2$heights))
+leg <- gtable_add_grob(leg, leg2, t = nrow(leg) - 1, l = 3)
+
+png("Figure 2a - trajectories adjusted for changes in HP.png", 
+    height = 4, width = 5.25, res = 600, units = "in")
+grid.arrange(Main, right = leg)
+dev.off()
+
+```
+```{r, fig.width = 4.85, fig.height = 3.5}
+
+grid.arrange(Main, right = leg)
+
+# These are the values that MH would like for axis length
+
+```
+
+## Mean change in &Phi; total and SI from SD1 to SD2, unadjusted for healthy pregnancy
+
+The plot below depicts the mean change in &Phi; total and SI from SD1 to SD2. These data have *not* been adjusted for changes in healthy pregnancy.  
+
+```{r, fig.width = 5}
+
+DeltaMean <- ddply(Subjects, "Arm", 
+                   function(x) c(
+                         PhitDelmean = mean(x$Phi.t.delta, na.rm = TRUE),
+                         SIDelmean = mean(x$SI.delta, na.rm = TRUE),
+                         PhitDelmeanA = mean(x$Phi.t.delta.NormA, na.rm = TRUE),
+                         SIDelmeanA = mean(x$SI.delta.NormA, na.rm = TRUE),
+                         PhitDelmeanB = mean(x$Phi.t.delta.NormB, na.rm = TRUE),
+                         SIDelmeanB = mean(x$SI.delta.NormB, na.rm = TRUE)
+                         
+                   ))
+DeltaMean$Group <- "All subjects"
+DeltaMean$Group2 <- "AllSubj"
+
+ggplot(DeltaMean, aes(x = SIDelmean, xend = 0,
+                      y = PhitDelmean, yend = 0,
+                      color = Arm)) +
+      geom_segment(size = 2) + 
+      scale_color_manual(values = Groups$Color) +
+      xlab(Labels[["SI.delta2"]]) +
+      ylab(Labels[["Phi.t.delta2"]]) +
+      # theme(axis.text.y = element_text(margin = margin(0, 0, 0, -15, unit = "pt"))) +
+      labs(color = "Study arm")
+
+```
+
+## Mean change in &Phi; total and SI from SD1 to SD2, adjusted for healthy pregnancy
+
+The plot below depicts the mean change in &Phi; total and SI from SD1 to SD2; the changes in &Phi; total and SI that occur during normal pregnancy have been subtracted from SD2, so these data *have* been adjusted for changes in healthy pregnancy.  
+
+
+```{r, fig.width = 5}
+
+DeltaMean$PhitDelmean.adj <- 
+      DeltaMean$PhitDelmean - DeltaMean$PhitDelmean[DeltaMean$Arm == "HP"]
+
+DeltaMean$SIDelmean.adj <- 
+      DeltaMean$SIDelmean - DeltaMean$SIDelmean[DeltaMean$Arm == "HP"]
+
+
+ggplot(DeltaMean[str_detect(DeltaMean$Arm, "GDM"), ],
+       aes(x = SIDelmean.adj, xend = 0,
+           y = PhitDelmean.adj, yend = 0,
+           color = Arm)) +
+      geom_segment(size = 2) + 
+      scale_color_manual(values = Groups$Color) +
+      xlab(Labels[["SI.delta2"]]) +
+      ylab(Labels[["Phi.t.delta2"]]) +
+      # theme(axis.text.y = element_text(margin = margin(0, 0, 0, -15, unit = "pt")),
+      #       axis.title.y = element_text(lineheight = 0.8)) +
+      labs(color = "Study arm")
+
+
+```
+
+
+# Comparisons between GDM and T2DM
+
+## All GDM vs. T2DM on SD1 (Supplemental Table 2)
+
+A Student's t test was used to compare the values for various parameters (listed in the table below) between all GDM subjects and T2DM subjects on SD1.    
+
+```{r}
+
+GDM.T2DMgrps <- Visits[Visits$DiseaseSt %in% c("T2DM", "GDM"), 
+                  c("SubjID", "SD", "DiseaseSt", "BMI", "Weight",
+                    "SubjAge", "DI", "PeakGluc", "Phi.b", 
+                    "Phi.d", "Phi.s", "Phi.t", "SI")]
+GDM.T2DMgrps <- gather(GDM.T2DMgrps, key = Parameter, value = Value, 
+                  -SubjID, -SD, -DiseaseSt)
+GDM.T2DMgrps <- GDM.T2DMgrps[complete.cases(GDM.T2DMgrps$Value), ]
+
+# Adding correction
+HPcorrection$SD <- "SD2"
+GDM.T2DMgrps <- join(GDM.T2DMgrps, 
+                HPcorrection[, c("Parameter", "Adjustment", "SD")], 
+                by = c("Parameter", "SD"), type = "left")
+HPcorrection$SD <- NULL
+GDM.T2DMgrps$Adjustment[GDM.T2DMgrps$DiseaseSt == "T2DM"] <- NA
+
+GDM.T2DMgrps$Value.adj <- ifelse(complete.cases(GDM.T2DMgrps$Adjustment), 
+                            GDM.T2DMgrps$Value - GDM.T2DMgrps$Adjustment, 
+                            GDM.T2DMgrps$Value)
+# No need to adjust BMI, which I don't know was adjusted at all for pregnancy, or SubjAge.
+GDM.T2DMgrps$Value.adj[GDM.T2DMgrps$Parameter %in% c("BMI", "Weight", "SubjAge")] <- 
+      GDM.T2DMgrps$Value[GDM.T2DMgrps$Parameter %in% c("BMI", "Weight", "SubjAge")]
+GDM.T2DMgrps$ID <- paste(GDM.T2DMgrps$SD, GDM.T2DMgrps$Parameter, sep = ".")
+GDM.T2DMgrps <- GDM.T2DMgrps[!(GDM.T2DMgrps$ID %in% c("SD2.BMI", "SD2.SubjAge", "SD2.Weight")), ]
+
+GDM.T2DMgrps.ttest <- ddply(GDM.T2DMgrps, c("SD", "Parameter"), function(x) {
+      data.frame(
+            pval = starSig2(t.test(x$Value.adj ~ x$DiseaseSt)$p.value),
+            CI.95 = paste(signif(t.test(x$Value.adj ~ x$DiseaseSt)$conf.int[[1]], 3),
+                          "to",
+                          signif(t.test(x$Value.adj ~ x$DiseaseSt)$conf.int[[2]], 3)),
+            Mean.GDM = mean.sd(x$Value.adj[x$DiseaseSt == "GDM"]),
+            Mean.T2DM = mean.sd(x$Value.adj[x$DiseaseSt == "T2DM"]))})
+
+GDM.T2DMgrps.ttest <- GDM.T2DMgrps.ttest[, c("SD", "Parameter", "Mean.GDM", "Mean.T2DM", "CI.95", "pval")]
+GDM.T2DMgrps.ttest$Parameter <- factor(GDM.T2DMgrps.ttest$Parameter, 
+                                  levels = c("SI", "Phi.t", "Phi.s", "Phi.d", "Phi.b", "DI", "PeakGluc", 
+                                             "SubjAge", "Weight", "BMI"))
+GDM.T2DMgrps.ttest <- arrange(GDM.T2DMgrps.ttest, SD, Parameter)
+
+names(GDM.T2DMgrps.ttest) <- c("Study day", "Parameter", 
+                          "Mean for GDM", "Mean for T2DM",  
+                          "95% confidence interval of the difference", 
+                          "p value")
+
+kable(GDM.T2DMgrps.ttest[1:10, ]) # I can't figure out how to subset with column names with spaces
+
+```
+
+## GDM MET vs. T2DM on SD2 (Supplemental Table 3)
+
+A Student's t test was used to compare the values for various parameters (listed in the table below) between GDM MET subjects and T2DM subjects on SD2. The values for GDM subjects on SD2 were adjusted to account for normal changes in healthy pregnancy.    
+
+```{r}
+
+METgrps <- Visits[Visits$Arm %in% c("T2DM", "GDM MET"), 
+                  c("SubjID", "SD", "Arm", "BMI", "Weight",
+                    "SubjAge", "DI", "PeakGluc", "Phi.b", 
+                    "Phi.d", "Phi.s", "Phi.t", "SI")]
+METgrps <- gather(METgrps, key = Parameter, value = Value, 
+                  -SubjID, -SD, -Arm)
+METgrps <- METgrps[complete.cases(METgrps$Value), ]
+
+# Adding correction
+HPcorrection$SD <- "SD2"
+METgrps <- join(METgrps, 
+                HPcorrection[, c("Parameter", "Adjustment", "SD")], 
+                by = c("Parameter", "SD"), type = "left")
+HPcorrection$SD <- NULL
+METgrps$Adjustment[METgrps$Arm == "T2DM"] <- NA
+
+METgrps$Value.adj <- ifelse(complete.cases(METgrps$Adjustment), 
+                            METgrps$Value - METgrps$Adjustment, 
+                            METgrps$Value)
+# No need to adjust BMI, which I don't know was adjusted at all for pregnancy, or SubjAge.
+METgrps$Value.adj[METgrps$Parameter %in% c("BMI", "Weight", "SubjAge")] <- 
+      METgrps$Value[METgrps$Parameter %in% c("BMI", "Weight", "SubjAge")]
+METgrps$ID <- paste(METgrps$SD, METgrps$Parameter, sep = ".")
+METgrps <- METgrps[!(METgrps$ID %in% c("SD2.BMI", "SD2.SubjAge", "SD2.Weight")), ]
+      
+METgrps.ttest <- ddply(METgrps, c("SD", "Parameter"), function(x) {
+      data.frame(
+            pval = starSig2(t.test(x$Value.adj ~ x$Arm)$p.value),
+            CI.95 = paste(signif(t.test(x$Value.adj ~ x$Arm)$conf.int[[1]], 3),
+                          "to",
+                          signif(t.test(x$Value.adj ~ x$Arm)$conf.int[[2]], 3)),
+            Mean.GDM = mean.sd(x$Value.adj[x$Arm == "GDM MET"]),
+            Mean.T2DM = mean.sd(x$Value.adj[x$Arm == "T2DM"]))})
+
+METgrps.ttest <- METgrps.ttest[, c("SD", "Parameter", "Mean.GDM", "Mean.T2DM", "CI.95", "pval")]
+METgrps.ttest$Parameter <- factor(METgrps.ttest$Parameter, 
+                                  levels = c("SI", "Phi.t", "Phi.s", "Phi.d", "Phi.b", "DI", "PeakGluc", 
+                                             "SubjAge", "Weight", "BMI"))
+METgrps.ttest <- arrange(METgrps.ttest, SD, Parameter)
+
+names(METgrps.ttest) <- c("Study day", "Parameter", 
+                          "Mean for GDM", "Mean for T2DM",  
+                          "95% confidence interval of the difference", 
+                          "p value")
+
+kable(METgrps.ttest[11:17, ])
+
+```
+
+The average &#177; standard deviation (range) metformin doses in the two groups were: 
+
+```{r}
+
+kable(ddply(Subjects[Subjects$Arm %in% c("T2DM", "GDM MET"), ], "Arm", function(x)
+      data.frame(METdose = mean.sd(x$Dose.MET, calcRange = TRUE, numDigRange = 0))))
+
+```
+
+## t tests comparing changes in SI, Phi total, and DI for groups on MET therapy and adjusted for changes in pregnancy in the case of GDM MET
+
+The p values listed in this table are the results of the t tests comparing T2DM vs. GDM MET for the change in parameters listed.  
+
+```{r METttest1}
+
+Deltas2.T2 <- gather(Subjects[Subjects$Arm %in% c("T2DM"),
+                              c("SubjID", "Arm", 
+                                "SI.delta", "Phi.t.delta", "DI.delta")],
+                     key = Parameter, value = Value, -SubjID, -Arm)
+
+Deltas2.GM <- gather(Subjects[Subjects$Arm %in% c("GDM MET"),
+                              c("SubjID", "Arm", 
+                                "SI.delta.NormA", "Phi.t.delta.NormA", "DI.delta.NormA")],
+                     key = Parameter, value = Value, -SubjID, -Arm)
+Deltas2.GM$Parameter <- sub("\\.NormA", "", Deltas2.GM$Parameter)
+
+Deltas2 <- rbind(Deltas2.T2, Deltas2.GM)
+Deltas2 <- droplevels(Deltas2)
+Deltas2.ttests <- ddply(Deltas2, c("Parameter"), function(x) 
+      data.frame(
+            pval = starSig2(t.test(x$Value ~ x$Arm)$p.value), 
+            CI.95 = paste(signif(t.test(x$Value ~ x$Arm)$conf.int[[1]], 3),
+                          "to",
+                          signif(t.test(x$Value ~ x$Arm)$conf.int[[2]], 3)),
+            Mean.GDM = mean.sd(x$Value[x$Arm == "GDM MET"]),
+            Mean.T2DM = mean.sd(x$Value[x$Arm == "T2DM"])))
+
+names(Deltas2.ttests) <- c("Parameter", "p value", 
+                           "95% confidence interval of the difference", 
+                           "Mean for GDM MET", "Mean for T2DM")
+kable(Deltas2.ttests)
+
+pvalT2.GM <- str_replace_all(Deltas2.ttests$'p value'[
+      Deltas2.ttests$Parameter == "DI.delta"], "\\\\", "")
+
+```
+
+## Figure 5: Trajectories of GDM MET, adjusted for changes in healthy pregnancy, and T2DM
+
+In the graph below, the GDM MET subjects *have* been adjusted for changes naturally occurring as pregnancy progresses by subtracting the mean HP values from the GDM MET subjects' mean measured SD2 values. The T2DM data are unchanged.   
+
+```{r, fig.width = 5.5, fig.height = 4}
+
+METtraject <- Means.Compl[Means.Compl$Arm %in% c("GDM MET", 
+                                                 "T2DM"), ]
+Remove <- c(which(METtraject$Arm == "GDM MET" &
+                        METtraject$SD == "SD2"), 
+            which(METtraject$Arm == "T2DM" &
+                        METtraject$SD == "SD2, adjusted"))
+METtraject <- METtraject[-Remove, ]
+rm(Remove)
+METtraject$SD <- revalue(METtraject$SD, c("SD2, adjusted" = "SD2"))
+
+METcurve <- Curve[Curve$Arm %in% c("T2DM", "GDM MET"), ]
+Remove <- c(which(METcurve$Arm == "GDM MET" &
+                        METcurve$SD == "SD2"), 
+            which(METcurve$Arm == "T2DM" &
+                        METcurve$SD == "SD2, adjusted"))
+METcurve <- METcurve[-Remove, ]
+rm(Remove)
+METcurve$SD <- revalue(METcurve$SD, c("SD2, adjusted" = "SD2"))
+
+Means.segments <- gather(METtraject[, c("Arm", "SD", "SI", "Phi.t")], 
+                         key = Parameter, value = Value, 
+                         -Arm, -SD)
+Means.segments$Parameter <- paste(Means.segments$SD, Means.segments$Parameter, sep = ".")
+Means.segments$SD <- NULL
+Means.segments <- spread(Means.segments, key = Parameter, value = Value)
+
+ggplot(METcurve, aes(x = SI, y = Phi.t, color = Arm,
+                     linetype = SD)) +
+      coord_cartesian(xlim = c(0, 15),
+                      ylim = c(10, 150)) +
+      geom_line(size = 1.15) +
+      geom_point(data = METtraject, 
+                 aes(x = SI, y = Phi.t, color = Arm, 
+                     shape = SD), inherit.aes = TRUE,
+                 size = 2, stroke = 1.25) +
+      geom_segment(data = Means.segments,
+                   aes(x = SD1.SI, xend = SD2.SI,
+                       y = SD1.Phi.t, yend = SD2.Phi.t,
+                       color = Arm),
+                   arrow = arrow(angle = 30, ends = "last",
+                                 length = unit(0.03, "npc")),
+                   inherit.aes = FALSE, size = 1.15) +
+      scale_x_continuous(expand = c(0, 0)) +
+      scale_y_continuous(expand = c(0, 0)) +
+      scale_shape_manual(values = c(16, 1)) +
+      scale_color_manual(values = GDMColors) +
+      labs(linetype = "Study Day", 
+           shape = "Study Day") +
+      annotate("text", x = 10, y = 125, label = paste("p =", pvalT2.GM)) + 
+      # guides(colour = guide_legend(order = 1),
+      #        shape = guide_legend(order = 2)) +
+      xlab(Labels[["SI2"]]) +
+      # theme(axis.text.y = element_text(margin = margin(0, 0, 0, -15,
+      #                                                  unit = "pt"))) +
+      ylab(Labels[["Phi.t2"]])
+
+ggsave("Figure 3 GDM MET and T2DM DI trajectories.png",
+       height = 4, width = 5.25, dpi = 600)
+
+
+```
+
+# Supplemental Figure 4 v1: Comparison of DI and fraction of glucose measurements meeting target  
+
+The following plot shows the unadjusted disposition index on SD2 on the x axis and the fraction of 7-day windows under glycemic control on the y axis. 
+
+```{r, fig.width = 5.5, fig.height = 4}
+
+Control <- join(Subjects[Subjects$DiseaseSt == "GDM", ],
+                Visits[Visits$SD == "SD2", c("SubjID", "DI")])
+Control <- plyr::rename(Control, c("DI" = "DI.SD2"))
+
+Labels[["DI.SD2"]] <- expression("Disposition index on SD2 (" * 10^-13 ~ "min"^-2 ~ mu * "U"^-1 ~ "mL)")
+
+ggplot(Control, aes(x = DI.SD2, y = PercWindContr, color = Arm)) +
+      geom_point() +
+      scale_color_manual(values = GDMColors) +
+      xlab(Labels[["DI.SD2"]]) + ylab("Fraction of 7-day windows\nunder glycemic control")
+            
+```
+
+# Supplemental Figure 4 v2: Comparison of DI and fraction of glucose measurements meeting target
+
+The following plot shows the change in disposition index on SD2, adjusted for changes in healthy pregnancy, on the x axis and the fraction of 7-day windows under glycemic control on the y axis. 
+
+```{r, fig.width = 5.5, fig.height = 4}
+
+ggplot(Control, aes(x = DI.delta.NormA, y = PercWindContr, color = Arm)) +
+      geom_point() +
+      scale_color_manual(values = GDMColors) +
+      xlab(Labels[["DI.delta.NormA2"]]) +
+      ylab("Fraction of 7-day windows\nunder glycemic control")
+
+
+```
+
+# Percentages achieving pharmacologic effect
+
+```{r}
+
+PharmEffect <- Subjects[Subjects$DiseaseSt == "GDM", ]
+PharmEffect$PharmEffect <- PharmEffect$SubjID %in% Subj.PharmEffect
+PharmEffect$GLYEffect <- PharmEffect$Arm %in% c("GDM GLY", "GDM Combo") &
+      PharmEffect$Phi.t.delta.NormA >= 0
+PharmEffect$METEffect <- PharmEffect$Arm %in% c("GDM MET", "GDM Combo") &
+      PharmEffect$SI.delta.NormA >= 0
+
+PE.T2 <- Subjects[Subjects$DiseaseSt == "T2DM", ]
+PE.T2$METEffect <- PE.T2$SI.delta >= 0
+
+PharmEffect <- rbind.fill(PharmEffect, PE.T2)
+PharmEffect$Arm <- factor(PharmEffect$Arm, levels = c("GDM GLY", "GDM MET", 
+                                                      "GDM Combo", "T2DM"))
+Combo.BothEffect <- 
+      length(which(PharmEffect$METEffect == TRUE &
+                   PharmEffect$GLYEffect == TRUE &
+                   PharmEffect$Arm == "GDM Combo"))/
+      length(which(PharmEffect$Arm == "GDM Combo"))
+
+PharmEffect <- ddply(PharmEffect, "Arm", function(x){
+      data.frame(
+            n = nrow(x),
+            
+            nGLYEffect = length(which(x$GLYEffect == TRUE)),
+            PercGLYEffect = paste0(round(
+                  100*length(which(x$GLYEffect == TRUE))/nrow(x), 0), "%"),
+            
+            nMETEffect = length(which(x$METEffect == TRUE)),
+            PercMETEffect = paste0(round(
+                  100*length(which(x$METEffect == TRUE))/nrow(x), 0), "%"),
+            
+            nPharmEffect = length(which(x$PharmEffect == TRUE)),
+            PercPharmEffect = paste0(
+                  round(100*length(which(x$PharmEffect == TRUE))/
+                              nrow(x), 0), "%"))
+})
+
+GDM.AnyEffect <- sum(PharmEffect$nPharmEffect[PharmEffect$Arm != "T2DM"]) / 
+      sum(PharmEffect$n[PharmEffect$Arm != "T2DM"])
+      
+
+names(PharmEffect) <- c("Arm", "number overall", 
+                        "number who achieved GLY effect",
+                        "percent who achieved GLY effect",
+                        "number who achieved MET effect",
+                        "percent who achieved MET effect",
+                        "number who achieved pharmacologic effect",
+                        "percent who achieved pharmacologic effect")
+
+kable(PharmEffect)
+
+```
+
+Fraction of GDM subjects who achieved any kind of pharmacologic effect: `r GDM.AnyEffect`
+
+Fraction of GDM Combo subjects who achieved both GLY and MET effects: `r Combo.BothEffect` 
+
+
+# Dose comparisons between mono- and combination therapy
+
+```{r}
+
+METdose <- t.test(Subjects$Dose.MET[Subjects$Arm %in% c("GDM MET", "GDM Combo")] ~
+                        Subjects$Arm[Subjects$Arm %in% c("GDM MET", "GDM Combo")])
+
+GLYdose <- t.test(Subjects$Dose.GLY[Subjects$Arm %in% c("GDM GLY", "GDM Combo")] ~
+                        Subjects$Arm[Subjects$Arm %in% c("GDM GLY", "GDM Combo")])
+
+T2vMETmono <- t.test(Subjects$Dose.MET[Subjects$Arm %in% c("GDM MET", "T2DM")] ~
+                           Subjects$Arm[Subjects$Arm %in% c("GDM MET", "T2DM")])
+
+T2vMETcombo <- t.test(Subjects$Dose.MET[Subjects$Arm %in% c("GDM Combo", "T2DM")] ~
+                            Subjects$Arm[Subjects$Arm %in% c("GDM Combo", "T2DM")])
+
+
+
+```
+A Student's t test was used to compare the dose of MET or GLY in monotherapy vs. combination therapy. The dose of GLY was lower in the GDM Combo group compared to monotherapy (difference: `r round(GLYdose$estimate[2] - GLYdose$estimate[1], 1)` (`r round(GLYdose$conf.int[1], 1)` to `r round(GLYdose$conf.int[2], 1)`) mg, p = `r signif(GLYdose$p.value, 1)`). The dose of MET tended to be lower in the GDM Combo group compared to monotherapy but failed to achieve significance at the 95% confidence level (difference: `r round(METdose$estimate[2] - METdose$estimate[1], 0)` (`r round(METdose$conf.int[1], 0)` to `r round(METdose$conf.int[2], 0)`) mg, p = `r signif(METdose$p.value, 0)`). 
+
+Doses of metformin for T2DM subjects were higher than those of GDM subjects receiving mono or combination therapy. Compared to monotherapy: difference: `r round(T2vMETmono$estimate[2] - T2vMETmono$estimate[1], 0)` (`r round(T2vMETmono$conf.int[1], 0)` to `r round(T2vMETmono$conf.int[2], 0)`) mg, p = `r as.character(signif(T2vMETmono$p.value, 0))`. Compared to combo therapy: difference: `r round(T2vMETcombo$estimate[2] - T2vMETcombo$estimate[1], 0)` (`r round(T2vMETcombo$conf.int[1], 0)` to `r round(T2vMETcombo$conf.int[2], 0)`) mg , p = `r as.character(signif(T2vMETcombo$p.value, 0))`
+
+
+# Demographic tables
+
+## All subjects who enrolled (Supplementary Table 1)
+
+**NB:** This is the only place in this report where the subjects included were all who enrolled. Elsewhere, the data only include subjects who completed the study and were adherent. 
+
+```{r}
+
+load("GDM - all subjects.RData")
+
+# Removing data for non-existent visits so that I don't count rows with no data.
+Visits.all <- Visits.all[complete.cases(Visits.all$PeakGluc), ]
+
+# Some treatment arm assignments hadn't been done yet for Subjects.all, so adding those
+Subjects.all <- dlply(Subjects.all, "Arm")
+Subjects.all[["NA"]]$Arm <- NULL
+Subjects.all[["NA"]] <- join(Subjects.all[["NA"]],
+                                 Visits.all[, c("SubjID", "Arm")],
+                                 by = "SubjID", type = "left")
+Subjects.all <- rbind.fill(Subjects.all)
+
+Demog1A <- Visits.all[Visits.all$SD == "SD1",
+                      c("SubjID", "Arm", "DiseaseSt", "BMI", "Height", "SubjAge",
+                        "Weight", "GestAge")]
+Demog1A <- plyr::rename(Demog1A, c("GestAge" = "GestAge.SD1"))
+Demog1A <- join(Demog1A, Visits[Visits$SD == "SD2", c("SubjID", "GestAge")],
+                type = "full")
+Demog1A <- plyr::rename(Demog1A, c("GestAge" = "GestAge.SD2"))
+
+# n.Subjects.all <- ddply(Subjects.all, "Arm", function(x) {
+#       data.frame(n = length(unique(x$SubjID)))}) 
+# # Counting this as all subjects in Subjects.all.
+# # There's one subject who's in Subjects.all but not Visits.all,
+# # but since we have some info for her, including that she met 
+# # eligibility criteria, I'm including her.
+# n.Subjects.all$Arm <- revalue(n.Subjects.all$Arm, c("GDM NA" = "GDM unassigned"))
+# Actually, don't go this route. Some of the subjects who were unassigned
+# eventually did get assigned. Use the numbers from Visits.all.
+
+Table1A <- ddply(Demog1A, "Arm", function(x) c(
+      Age = mean.sd(x$SubjAge, calcRange = TRUE, numDigRange = 0), 
+      BMI = mean.sd(x$BMI, calcRange = TRUE, numDigRange = 0), 
+      GestAge.SD1 = mean.sd(x$GestAge.SD1, calcRange = TRUE, numDigRange = 0), 
+      GestAge.SD2 = mean.sd(x$GestAge.SD2, calcRange = TRUE, numDigRange = 0), 
+      Height = mean.sd(x$Height, calcRange = TRUE, numDigRange = 0), 
+      Weight = mean.sd(x$Weight, calcRange = TRUE, numDigRange = 0) 
+))
+
+# Adding column for all GDMs together.
+Table1A.AllGDM <- ddply(Demog1A, "DiseaseSt", function(x) c(
+      Age = mean.sd(x$SubjAge, calcRange = TRUE, numDigRange = 0), 
+      BMI = mean.sd(x$BMI, calcRange = TRUE, numDigRange = 0), 
+      GestAge.SD1 = mean.sd(x$GestAge.SD1, calcRange = TRUE, numDigRange = 0), 
+      GestAge.SD2 = mean.sd(x$GestAge.SD2, calcRange = TRUE, numDigRange = 0), 
+      Height = mean.sd(x$Height, calcRange = TRUE, numDigRange = 0), 
+      Weight = mean.sd(x$Weight, calcRange = TRUE, numDigRange = 0) 
+))
+Table1A.AllGDM <- Table1A.AllGDM[Table1A.AllGDM$DiseaseSt == "GDM", ]
+Table1A.AllGDM$Arm <- "All GDM"
+Table1A.AllGDM$DiseaseSt <- NULL
+
+# Adding n
+n <- ddply(Visits.all, c("Arm", "SD"), function(x) {
+      data.frame(n = length(unique(
+            x$SubjID[complete.cases(x$PeakGluc)])))
+})
+n$SD <- revalue(n$SD, c("SD1" = "nSD1",
+                        "SD2" = "nSD2"))
+n <- spread(n, key = SD, value = n)
+n <- rbind(n, 
+           data.frame(Arm = "All GDM", 
+                      nSD1 = length(unique(
+                            Visits.all$SubjID[Visits.all$SD == "SD1" &
+                                                    Visits.all$DiseaseSt == "GDM"])), 
+                      nSD2 = length(unique(
+                            Visits.all$SubjID[Visits.all$SD == "SD2" &
+                                                    Visits.all$DiseaseSt == "GDM"]))))
+
+Demog1A.GDM <- Demog1A[Demog1A$Arm %in% c("GDM GLY", "GDM MET", "GDM Combo"), ]
+
+Age.aov <- aov(Demog1A.GDM$SubjAge ~ Demog1A.GDM$Arm)
+BMI.aov <- aov(Demog1A.GDM$BMI ~ Demog1A.GDM$Arm)
+GestAge.aov <- aov(Demog1A.GDM$GestAge.SD1 ~ Demog1A.GDM$Arm)
+
+Tests1A <- data.frame(
+      Age = summary(Age.aov)[[1]][["Pr(>F)"]][1],
+      BMI = summary(BMI.aov)[[1]][["Pr(>F)"]][1],
+      GestAge = summary(GestAge.aov)[[1]][["Pr(>F)"]][1]
+)
+# No significant differences between GDM groups for Age, BMI, or GestAge.
+
+Table1A <- rbind(Table1A, Table1A.AllGDM)
+Table1A <- join(Table1A, n)
+
+
+```
+```{r}
+
+Demog1B <- Subjects.all[, c("SubjID", "AmerInd", "Asian", "Black", "White", 
+                            "Ethnicity", "Islander", "Arm", "DiseaseSt")]
+
+Table1B <- ddply(Demog1B, "Arm", function(x) c(
+      AmerInd = paste0(sum(x$AmerInd), " (", 
+                       round(100*sum(x$AmerInd)/nrow(x), 1), ")"),
+      Asian = paste0(sum(x$Asian), " (", 
+                     round(100*sum(x$Asian)/nrow(x), 1), ")"),
+      Black = paste0(sum(x$Black), " (", 
+                     round(100*sum(x$Black)/nrow(x), 1), ")"),
+      Islander = paste0(sum(x$Islander), " (", 
+                        round(100*sum(x$Islander)/nrow(x), 1), ")"),
+      White = paste0(sum(x$White), " (", 
+                     round(100*sum(x$White)/nrow(x), 1), ")"),
+      Latina = paste0(sum(x$Ethnicity), " (", 
+                      round(100*sum(x$Ethnicity)/nrow(x), 1), ")")
+))
+
+Table1B.AllGDM <- ddply(Demog1B, "DiseaseSt", function(x) c(
+      AmerInd = paste0(sum(x$AmerInd), " (", 
+                       round(100*sum(x$AmerInd)/nrow(x), 1), ")"),
+      Asian = paste0(sum(x$Asian), " (", 
+                     round(100*sum(x$Asian)/nrow(x), 1), ")"),
+      Black = paste0(sum(x$Black), " (", 
+                     round(100*sum(x$Black)/nrow(x), 1), ")"),
+      Islander = paste0(sum(x$Islander), " (", 
+                        round(100*sum(x$Islander)/nrow(x), 1), ")"),
+      White = paste0(sum(x$White), " (", 
+                     round(100*sum(x$White)/nrow(x), 1), ")"),
+      Latina = paste0(sum(x$Ethnicity), " (", 
+                      round(100*sum(x$Ethnicity)/nrow(x), 1), ")")
+))
+Table1B.AllGDM <- Table1B.AllGDM[Table1B.AllGDM$DiseaseSt == "GDM", ]
+Table1B.AllGDM$Arm <- "All GDM"
+Table1B.AllGDM$DiseaseSt <- NULL
+
+Table1B <- rbind(Table1B, Table1B.AllGDM)
+
+```
+```{r}
+
+Demog1C <- read.xlsx2("Brookes tables FINAL  (version 1).xlsx",
+                      sheetName = "Data",
+                      stringsAsFactors = FALSE,
+                      colClasses = c("character", "character", 
+                                     rep("numeric", 57)))
+Demog1C <- 
+      plyr::rename(
+            Demog1C, c(
+                  "Subject.." = "SubjID",
+                  "drug" = "Arm",
+                  "Hb.A1C.screening" = "GlycosHb",
+                  "X1.hr.test" = "Gluc1Hr",
+                  "X3.hr.test..fasting" = "Gluc3hr.fast",
+                  "X3.hr.test..1.hr.glucose" = "Gluc3hr.1",
+                  "X3.hr.test..2.hr.glucose" = "Gluc3hr.2",
+                  "X3.hr.test..3.hr.glucose" = "Gluc3hr.3",
+                  "X2.hr.test..fasting" = "Gluc2hr.fast",
+                  "X2.hr.test..1.hr.glucose" = "Gluc2hr.1",
+                  "X2.hr.test..2.hr.glucose" = "Gluc2hr.2",
+                  "Tobacco.during.pregnancy" = "Smoking"))
+
+# There are clearly some instances of 0's filled in where there
+# should be NA or NaN. 
+Demog1C$Gluc1Hr[which(Demog1C$Gluc1Hr == 0)] <- NA
+Demog1C$Gluc2hr.fast[which(Demog1C$Gluc2hr.fast == 0)] <- NA
+Demog1C$Gluc2hr.1[which(Demog1C$Gluc2hr.1 == 0)] <- NA
+Demog1C$Gluc2hr.2[which(Demog1C$Gluc2hr.2 == 0)] <- NA
+
+Demog1C <- join(Demog1C, Subjects.all[, c("SubjID", "DiseaseSt")])
+
+Table1C <- ddply(Demog1C, "Arm", function(x) c(
+      Nulliparous = paste0(length(which(x$Total.pregnancies == 0)),
+                           " (",
+                           round(100*length(which(x$Total.pregnancies == 0))/nrow(x), 1),
+                           ")"),
+      ThreePlusTerm = paste0(length(which(x$Pregnancy.terminations.or.miscarriages >= 3)),
+                             " (",
+                             round(100*length(which(
+                                   x$Pregnancy.terminations.or.miscarriages >= 3))/
+                                         nrow(x), 1), ")"),
+      Preeclampsia = paste0(sum(x$Preeclampsia), 
+                            " (", round(100*sum(x$Preeclampsia)/nrow(x), 1), ")"),
+      GlycosHb = mean.sd(x$GlycosHb), 
+      Gluc1Hr = mean.sd(x$Gluc1Hr), 
+      Gluc3hr.fast = mean.sd(x$Gluc3hr.fast), 
+      Gluc3hr.1 = mean.sd(x$Gluc3hr.1), 
+      Gluc3hr.2 = mean.sd(x$Gluc3hr.2), 
+      Gluc3hr.3 = mean.sd(x$Gluc3hr.3), 
+      Gluc2hr.fast = mean.sd(x$Gluc2hr.fast), 
+      Gluc2hr.1 = mean.sd(x$Gluc2hr.1), 
+      Gluc2hr.2 = mean.sd(x$Gluc2hr.2),
+      Systolic = mean.sd(x$Systolic.BP), 
+      Diastolic = mean.sd(x$Diastolic.BP), 
+      Smoking = paste0(length(which(x$Smoking == 1)), " (",
+                       round(100*length(which(x$Smoking == 1))/nrow(x), 1), ")")
+))
+
+Table1C.AllGDM <- ddply(Demog1C[Demog1C$DiseaseSt == "GDM", ],
+                        "DiseaseSt", function(x) c(
+                              Nulliparous = paste0(length(which(x$Total.pregnancies == 0)),
+                                                   " (",
+                                                   round(100*length(which(x$Total.pregnancies == 0))/nrow(x), 1),
+                                                   ")"),
+                              ThreePlusTerm = paste0(length(which(x$Pregnancy.terminations.or.miscarriages >= 3)),
+                                                     " (",
+                                                     round(100*length(which(
+                                                           x$Pregnancy.terminations.or.miscarriages >= 3))/
+                                                                 nrow(x), 1), ")"),
+                              Preeclampsia = paste0(sum(x$Preeclampsia), 
+                                                    " (",round(100*sum(x$Preeclampsia)/nrow(x), 1), ")"),
+                              GlycosHb = mean.sd(x$GlycosHb), 
+                              Gluc1Hr = mean.sd(x$Gluc1Hr), 
+                              Gluc3hr.fast = mean.sd(x$Gluc3hr.fast),
+                              Gluc3hr.1 = mean.sd(x$Gluc3hr.1), 
+                              Gluc3hr.2 = mean.sd(x$Gluc3hr.2), 
+                              Gluc3hr.3 = mean.sd(x$Gluc3hr.3), 
+                              Gluc2hr.fast = mean.sd(x$Gluc2hr.fast), 
+                              Gluc2hr.1 = mean.sd(x$Gluc2hr.1), 
+                              Gluc2hr.2 = mean.sd(x$Gluc2hr.2),
+                              Systolic = mean.sd(x$Systolic.BP), 
+                              Diastolic = mean.sd(x$Diastolic.BP), 
+                              Smoking = paste0(length(which(x$Smoking == 1)), " (",
+                                               round(100*length(which(x$Smoking == 1))/nrow(x), 1), ")")
+                        ))
+
+Table1C.AllGDM$Arm <- "All GDM"
+Table1C.AllGDM$DiseaseSt <- NULL
+Table1C <- rbind(Table1C, Table1C.AllGDM)
+Table1C$Arm <- revalue(Table1C$Arm, c("Glyburide" = "GDM GLY",
+                                      "Metformin" = "GDM MET",
+                                      "Combo" = "GDM Combo"))
+Table1C <- gather(Table1C, key = Parameter, value = Value, 
+                  -Arm)
+Table1C <- spread(Table1C, key = Arm, value = Value)
+
+TTests1C <- data.frame(
+      Systolic = summary(aov(Demog1C$Systolic.BP ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1],
+      Diastolic = summary(aov(Demog1C$Diastolic.BP ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1],
+      Gluc1Hr = summary(aov(Demog1C$Gluc1Hr ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1],
+      # Gluc2hr.1 = summary(aov(Demog1C$Gluc2hr.1 ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1],
+      # Gluc2hr.2 = summary(aov(Demog1C$Gluc2hr.2 ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1],
+      # Gluc2hr.fast = summary(aov(Demog1C$Gluc2hr.fast ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1],
+      Gluc3hr.1 = summary(aov(Demog1C$Gluc3hr.1 ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1],
+      Gluc3hr.2 = summary(aov(Demog1C$Gluc3hr.2 ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1],
+      Gluc3hr.3 = summary(aov(Demog1C$Gluc3hr.3 ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1],
+      Gluc3hr.fast = summary(aov(Demog1C$Gluc3hr.fast ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1], # *
+      GlycosHb = summary(aov(Demog1C$GlycosHb ~ Demog1C$Arm))[[1]][["Pr(>F)"]][1])
+
+ParousMat <- ddply(Demog1C, "Arm", function(x) c(
+      N = nrow(x),
+      M = length(which(x$Total.pregnancies == 0))))
+ParousMat$N <- ParousMat$N - ParousMat$M
+ParousChi <- chisq.test(as.matrix(ParousMat[, c("N", "M")]))
+
+ThreePlusTermMat <- ddply(Demog1C, "Arm", function(x) c(
+      N = nrow(x),
+      M = length(which(x$Pregnancy.terminations.or.miscarriages >= 3))))
+ThreePlusTermMat$N <- ThreePlusTermMat$N - ThreePlusTermMat$M
+ThreePlusTermChi <- chisq.test(as.matrix(ThreePlusTermMat[, c("N", "M")]))
+
+SmokingMat <- ddply(Demog1C, "Arm", function(x) c(
+      N = nrow(x),
+      M = length(which(x$Pregnancy.terminations.or.miscarriages >= 3))))
+SmokingMat$N <- SmokingMat$N - SmokingMat$M
+SmokingChi <- chisq.test(as.matrix(SmokingMat[, c("N", "M")]))
+
+# No subjects experienced preeclampsia, so not testing that.
+# Nothing sig by chi square test.
+
+```
+```{r}
+# Reshaping
+Table1A <- gather(Table1A, key = Parameter, value = Value, -Arm) %>% 
+      spread(Arm, Value)
+Table1B <- gather(Table1B, key = Parameter, value = Value, -Arm) %>% 
+      spread(Arm, Value)
+
+Table1A$Parameter <- factor(Table1A$Parameter, 
+                            levels = c("nSD1", "nSD2", "Age", "Height", 
+                                       "Weight", "BMI", "GestAge.SD1", "GestAge.SD2"))
+Table1A <- arrange(Table1A, Parameter)
+Table1A$Parameter <- revalue(Table1A$Parameter, 
+                             c("nSD1" = "n, SD1", "nSD2" = "n, SD2", 
+                               "Age" = "Age (years)", "Height" = "Height (cm)", 
+                               "Weight" = "Body weight (kg)",
+                               "BMI" = "BMI (kg/m2)", 
+                               "GestAge.SD1" = "GA, SD1 (weeks)",
+                               "GestAge.SD2" = "GA, SD2 (weeks)"))
+# Table1A
+
+```
+```{r}
+Doses.all <- join(Doses.all, Subjects.all[, c("SubjID", "Arm", "DiseaseSt")], 
+                  type = "left")
+
+Table1D <- ddply(Doses.all, "Arm", function(x) c(
+      Dose.GLY = mean.sd(x$Dose.GLY, calcRange = TRUE),
+      Dose.MET = mean.sd(x$Dose.MET, calcRange = TRUE)
+))
+
+Table1D.AllGDM <- ddply(Doses.all, "DiseaseSt", function(x) c(
+      Dose.GLY = mean.sd(x$Dose.GLY, calcRange = TRUE),
+      Dose.MET = mean.sd(x$Dose.MET, calcRange = TRUE)
+))
+
+Table1D.AllGDM <- Table1D.AllGDM[Table1D.AllGDM$DiseaseSt == "GDM", ]
+Table1D.AllGDM$Arm <- "All GDM"
+Table1D.AllGDM$DiseaseSt <- NULL
+
+Table1D <- rbind(Table1D, Table1D.AllGDM)
+
+Table1D <- gather(Table1D, key = Parameter, value = Value, -Arm) %>% 
+      spread(Arm, Value)
+Table1D$Parameter <- revalue(Table1D$Parameter, 
+                             c("Dose.GLY" = "Total daily glyburide dose (mg)",
+                               "Dose.MET" = "Total daily metformin dose (mg)"))
+
+# rbind.fill(Table1A, Table1D)
+
+```
+
+```{r}
+
+library(MASS)
+RaceTable <- gather(Demog1B[, c("SubjID", "AmerInd", "Asian", "Black",
+                                "White", "Islander", "Arm")], 
+                    key = Race, value = Count, -SubjID, -Arm)
+RaceTable <- RaceTable[RaceTable$Count > 0, ]
+RaceTable <- table(RaceTable$Race, RaceTable$Arm)
+
+Chi <- chisq.test(RaceTable)
+
+# Table1B[, c("Parameter", "All GDM", "GDM GLY", "GDM MET", "GDM Combo", "HP", "T2DM")]
+
+```
+
+```{r}
+# Glycemic control
+Table1E <- ddply(Subjects.all, c("Arm"), function(x) c(
+      
+      DurGlyContr = mean.sd(x$DurGlyContr, calcRange = TRUE), 
+      
+      GlyContr = paste0(length(which(x$GlyContr == FALSE)), " (",
+                        100*round(length(which(x$GlyContr == FALSE))/
+                                        nrow(x), 2), "%)")
+))
+
+Table1E.AllGDM <- ddply(Subjects.all, c("DiseaseSt"), function(x) c(
+      
+      DurGlyContr = mean.sd(x$DurGlyContr, calcRange = TRUE), 
+      
+      GlyContr = paste0(length(which(x$GlyContr == FALSE)), " (",
+                        100*round(length(which(x$GlyContr == FALSE))/
+                                        nrow(x), 2), "%)")
+))
+
+Table1E.AllGDM <- Table1E.AllGDM[Table1E.AllGDM$DiseaseSt == "GDM", ]
+Table1E.AllGDM$Arm <- "All GDM"
+Table1E.AllGDM$DiseaseSt <- NULL
+
+Table1E <- rbind(Table1E, Table1E.AllGDM)
+
+Table1E <- gather(Table1E, key = Parameter, value = Value, -Arm) %>% 
+      spread(Arm, Value)
+```
+```{r}
+
+Table1B$Parameter <- revalue(Table1B$Parameter, 
+                   c("AmerInd" = "American Indian", 
+                     "Islander" = "Pacific Islander"))
+
+Table1 <- rbind.fill(Table1A, # basic demographics
+                     Table1D, # dose info
+                     Table1B) # race info
+names(Table1)[1] <- "Demographic characteristic, mean +/- SD (range) or N (%)"
+kable(Table1)
+
+```
+
+
+## Only subjects who completed the study and were adherent (Table 1)
+
+```{r}
+
+rm(Demog1A, Table1A, Table1A.AllGDM, n, Demog1A.GDM, Age.aov, BMI.aov,
+   GestAge.aov, Tests1A, Demog1B, Table1B, Table1B.AllGDM, Demog1C, Table1C,
+   Table1C.AllGDM, Table1D, Table1D.AllGDM, RaceTable, Chi)
+
+
+Demog1A <- Visits[Visits$SD == "SD1",
+                  c("SubjID", "Arm", "DiseaseSt", "BMI", "Height", "SubjAge",
+                    "Weight", "GestAge")]
+Demog1A <- plyr::rename(Demog1A, c("GestAge" = "GestAge.SD1"))
+Demog1A <- join(Demog1A, Visits[Visits$SD == "SD2", c("SubjID", "GestAge")],
+                type = "full")
+Demog1A <- plyr::rename(Demog1A, c("GestAge" = "GestAge.SD2"))
+
+# n.Subjects <- ddply(Subjects, "Arm", function(x) {
+#       data.frame(n = length(unique(x$SubjID)))}) 
+# # Counting this as all subjects in Subjects.
+# # There's one subject who's in Subjects but not Visits,
+# # but since we have some info for her, including that she met 
+# # eligibility criteria, I'm including her.
+# n.Subjects$Arm <- revalue(n.Subjects$Arm, c("GDM NA" = "GDM unassigned"))
+# Actually, don't go this route. Some of the subjects who were unassigned
+# eventually did get assigned. Use the numbers from Visits.
+
+Table1A <- ddply(Demog1A, "Arm", function(x) c(
+      Age = mean.sd(x$SubjAge, calcRange = TRUE, numDigRange = 0), 
+      BMI = mean.sd(x$BMI, calcRange = TRUE, numDigRange = 0), 
+      GestAge.SD1 = mean.sd(x$GestAge.SD1, calcRange = TRUE, numDigRange = 0), 
+      GestAge.SD2 = mean.sd(x$GestAge.SD2, calcRange = TRUE, numDigRange = 0), 
+      Height = mean.sd(x$Height, calcRange = TRUE, numDigRange = 0), 
+      Weight = mean.sd(x$Weight, calcRange = TRUE, numDigRange = 0) 
+))
+
+# Adding column for all GDMs together.
+Table1A.AllGDM <- ddply(Demog1A, "DiseaseSt", function(x) c(
+      Age = mean.sd(x$SubjAge, calcRange = TRUE, numDigRange = 0), 
+      BMI = mean.sd(x$BMI, calcRange = TRUE, numDigRange = 0), 
+      GestAge.SD1 = mean.sd(x$GestAge.SD1, calcRange = TRUE, numDigRange = 0), 
+      GestAge.SD2 = mean.sd(x$GestAge.SD2, calcRange = TRUE, numDigRange = 0), 
+      Height = mean.sd(x$Height, calcRange = TRUE, numDigRange = 0), 
+      Weight = mean.sd(x$Weight, calcRange = TRUE, numDigRange = 0) 
+))
+Table1A.AllGDM <- Table1A.AllGDM[Table1A.AllGDM$DiseaseSt == "GDM", ]
+Table1A.AllGDM$Arm <- "All GDM"
+Table1A.AllGDM$DiseaseSt <- NULL
+
+# Adding n
+n <- ddply(Visits, c("Arm"), function(x) {
+      data.frame(n = length(unique(
+            x$SubjID[complete.cases(x$PeakGluc)])))
+})
+n <- rbind(n, 
+           data.frame(Arm = "All GDM", 
+                      n = length(unique(
+                            Visits$SubjID[complete.cases(Visits$PeakGluc) &
+                                                Visits$DiseaseSt == "GDM"]))))
+
+Demog1A.GDM <- Demog1A[Demog1A$Arm %in% c("GDM GLY", "GDM MET", "GDM Combo"), ]
+
+Age.aov <- aov(Demog1A.GDM$SubjAge ~ Demog1A.GDM$Arm)
+BMI.aov <- aov(Demog1A.GDM$BMI ~ Demog1A.GDM$Arm)
+GestAge.aov <- aov(Demog1A.GDM$GestAge.SD1 ~ Demog1A.GDM$Arm)
+
+Tests1A <- data.frame(
+      Age = summary(Age.aov)[[1]][["Pr(>F)"]][1],
+      BMI = summary(BMI.aov)[[1]][["Pr(>F)"]][1],
+      GestAge = summary(GestAge.aov)[[1]][["Pr(>F)"]][1]
+)
+# No significant differences between GDM groups for Age, BMI, or GestAge.
+
+Table1A <- rbind(Table1A, Table1A.AllGDM)
+Table1A <- join(Table1A, n)
+
+
+```
+```{r}
+
+Demog1B <- Subjects[, c("SubjID", "AmerInd", "Asian", "Black", "White", 
+                        "Ethnicity", "Islander", "Arm", "DiseaseSt")]
+
+Table1B <- ddply(Demog1B, "Arm", function(x) c(
+      AmerInd = paste0(sum(x$AmerInd), " (", 
+                       round(100*sum(x$AmerInd)/nrow(x), 1), ")"),
+      Asian = paste0(sum(x$Asian), " (", 
+                     round(100*sum(x$Asian)/nrow(x), 1), ")"),
+      Black = paste0(sum(x$Black), " (", 
+                     round(100*sum(x$Black)/nrow(x), 1), ")"),
+      Islander = paste0(sum(x$Islander), " (", 
+                        round(100*sum(x$Islander)/nrow(x), 1), ")"),
+      White = paste0(sum(x$White), " (", 
+                     round(100*sum(x$White)/nrow(x), 1), ")"),
+      Latina = paste0(sum(x$Ethnicity), " (", 
+                      round(100*sum(x$Ethnicity)/nrow(x), 1), ")")
+))
+
+Table1B.AllGDM <- ddply(Demog1B, "DiseaseSt", function(x) c(
+      AmerInd = paste0(sum(x$AmerInd), " (", 
+                       round(100*sum(x$AmerInd)/nrow(x), 1), ")"),
+      Asian = paste0(sum(x$Asian), " (", 
+                     round(100*sum(x$Asian)/nrow(x), 1), ")"),
+      Black = paste0(sum(x$Black), " (", 
+                     round(100*sum(x$Black)/nrow(x), 1), ")"),
+      Islander = paste0(sum(x$Islander), " (", 
+                        round(100*sum(x$Islander)/nrow(x), 1), ")"),
+      White = paste0(sum(x$White), " (", 
+                     round(100*sum(x$White)/nrow(x), 1), ")"),
+      Latina = paste0(sum(x$Ethnicity), " (", 
+                      round(100*sum(x$Ethnicity)/nrow(x), 1), ")")
+))
+Table1B.AllGDM <- Table1B.AllGDM[Table1B.AllGDM$DiseaseSt == "GDM", ]
+Table1B.AllGDM$Arm <- "All GDM"
+Table1B.AllGDM$DiseaseSt <- NULL
+
+Table1B <- rbind(Table1B, Table1B.AllGDM)
+
+```
+```{r}
+# Reshaping
+Table1A <- gather(Table1A, key = Parameter, value = Value, -Arm) %>% 
+      spread(Arm, Value)
+Table1B <- gather(Table1B, key = Parameter, value = Value, -Arm) %>% 
+      spread(Arm, Value)
+
+Table1A$Parameter <- factor(Table1A$Parameter, 
+                            levels = c("n", "Age", "Height", 
+                                       "Weight", "BMI", "GestAge.SD1", "GestAge.SD2"))
+Table1A <- arrange(Table1A, Parameter)
+Table1A$Parameter <- revalue(Table1A$Parameter, 
+                             c("Age" = "Age (years)", "Height" = "Height (cm)", 
+                               "Weight" = "Body weight (kg)",
+                               "BMI" = "BMI (kg/m2)", 
+                               "GestAge.SD1" = "GA, SD1 (weeks)",
+                               "GestAge.SD2" = "GA, SD2 (weeks)"))
+# Table1A
+
+Table1B$Parameter <- revalue(Table1B$Parameter, 
+                   c("AmerInd" = "American Indian", 
+                     "Islander" = "Pacific Islander"))
+
+```
+```{r}
+Doses <- join(Doses, Subjects[, c("SubjID", "Arm", "DiseaseSt")], 
+              type = "left")
+
+Table1D <- ddply(Doses, "Arm", function(x) c(
+      Dose.GLY = mean.sd(x$Dose.GLY, calcRange = TRUE),
+      Dose.MET = mean.sd(x$Dose.MET, calcRange = TRUE)
+))
+
+Table1D.AllGDM <- ddply(Doses, "DiseaseSt", function(x) c(
+      Dose.GLY = mean.sd(x$Dose.GLY, calcRange = TRUE),
+      Dose.MET = mean.sd(x$Dose.MET, calcRange = TRUE)
+))
+
+Table1D.AllGDM <- Table1D.AllGDM[Table1D.AllGDM$DiseaseSt == "GDM", ]
+Table1D.AllGDM$Arm <- "All GDM"
+Table1D.AllGDM$DiseaseSt <- NULL
+
+Table1D <- rbind(Table1D, Table1D.AllGDM)
+
+Table1D <- gather(Table1D, key = Parameter, value = Value, -Arm) %>% 
+      spread(Arm, Value)
+
+Table1D$Parameter <- revalue(Table1D$Parameter, 
+                             c("Dose.GLY" = "Total daily glyburide dose (mg)",
+                               "Dose.MET" = "Total daily metformin dose (mg)"))
+
+# rbind.fill(Table1A, Table1D)
+
+```
+
+```{r}
+
+library(MASS)
+RaceTable <- gather(Demog1B[, c("SubjID", "AmerInd", "Asian", "Black",
+                                "White", "Islander", "Arm")], 
+                    key = Race, value = Count, -SubjID, -Arm)
+RaceTable <- RaceTable[RaceTable$Count > 0, ]
+RaceTable <- table(RaceTable$Race, RaceTable$Arm)
+
+Chi <- chisq.test(RaceTable)
+
+# Table1B[, c("Parameter", "All GDM", "GDM GLY", "GDM MET", "GDM Combo", "HP", "T2DM")]
+
+```
+
+```{r}
+
+Table1 <- rbind.fill(Table1A, # basic demographics
+                     Table1D, # dose info
+                     Table1B) # race info
+names(Table1)[1] <- "Demographic characteristic, mean +/- SD (range) or N (%)"
+kable(Table1)
+
+```
+
+
+# Comparison of GDMs and HP controls  
+
+Student's t tests were used to compare the age, weight, and BMI of the GDM subjects to those of the healthy pregnant negative controls. As with all other data in this report *except* Supplementary Table 1, these analyses only include subjects who completed the study and were adherent.   
+
+```{r GDMHPmatch, fig.width = 6, fig.height = 3}
+
+Meta <- gather(Visits[Visits$DiseaseSt != "T2DM" & Visits$SD == "SD1", 
+                      c("SubjID", "DiseaseSt", "SubjAge", "BMI", "Weight")],
+               key = Parameter, value = Value, 
+               -SubjID, -DiseaseSt)
+
+DF <- ddply(Meta, c("DiseaseSt", "Parameter"), function(x) {
+      data.frame(MeanSD = mean.sd(x$Value))
+})
+
+DF$Parameter <- revalue(DF$Parameter, c("SubjAge" = "Subject Age"))
+DF <- plyr::rename(DF, c("DiseaseSt" = "Group"))
+kable(spread(DF, key = Parameter, value = MeanSD))
+
+```
+
+Here are the results of Student's t tests comparing the two groups:  
+
+```{r}
+
+Meta.ttest <- dlply(Meta, c("Parameter"), function(x) {
+      t.test(x$Value ~ x$DiseaseSt)})
+
+Meta.ttest <- ldply(Meta.ttest, function(x) {
+      data.frame(pval = x$p.value,
+                 CIlower = round(x$conf.int[1], 1),
+                 CIupper = round(x$conf.int[2], 1))
+})
+
+Meta.ttest$pval <- starSig2(Meta.ttest$pval)
+Meta.ttest$Units <- revalue(Meta.ttest$Parameter, 
+                            c("BMI" = "kg/m2", 
+                              "SubjAge" = "years",
+                              "Weight" = "kg"))
+Meta.ttest$Result <- paste0("95% CI of the difference: ", 
+                          Meta.ttest$CIlower, " to ",
+                          Meta.ttest$CIupper, " ", Meta.ttest$Units,
+                          ", p = ", Meta.ttest$pval)
+
+kable(Meta.ttest[, c("Parameter", "Result")])
+
+
+```
+
